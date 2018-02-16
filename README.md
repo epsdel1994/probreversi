@@ -1,8 +1,8 @@
 # probreversi
 
-Implementation of probability reversi.
+Implementation of Probability Reversi.
 
 ## Execution
 
-probreversi (under construction)
+under construction
 
