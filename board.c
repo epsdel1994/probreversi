@@ -62,27 +62,33 @@ void pt_delete(ProbTable *pt)
 	free(pt);
 }
 
+ProbTable *board_get_probtable(Board *board, int x, int y)
+{
+	ProbTable *pt = pt_create();
+
+	// calculate probability for each cell
+
+	return pt;
+}
+
 BoardProb *board_get_prob(Board *board)
 {
 	BoardProb *bp = malloc(sizeof(ProbTable*) * 8);
 	for(int i=0; i<8; i++){
 		bp[i] = malloc(sizeof(ProbTable) * 8);
 		for(int j=0; j<8; j++){
-			bp[i][j] = pt_create();
+			bp[i][j] = board_get_probtable(board, i, j);
 		}
 	}
-
-	// calculate probability for each cell
-
 	return bp;
 }
 
-bool board_move(Board *board, int x, int y, double prob, BoardProb *bp)
+Board *board_move(Board *board, int x, int y, double prob, BoardProb *bp)
 {
 	if( (prob * bp[x][y]->prob[0] + (1-prob) * bp[x][y]->prob[1]) <= 0.5){
-		return false;
+		return NULL;
 	}
 
-	return false;
+	return NULL;
 }
 

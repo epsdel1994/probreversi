@@ -13,6 +13,6 @@ void board_delete(Board *board);
 
 BoardProb *board_get_prob(Board *board);
 bool board_can_move(ProbTable *pt, double prob);
-bool board_move(Board *board, int x, int y, double prob, BoardProb *bp);
+Board *board_move(Board *board, int x, int y, double prob, BoardProb *bp);
 
 #endif
