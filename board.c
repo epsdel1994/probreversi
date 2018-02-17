@@ -87,7 +87,7 @@ ProbTable *board_get_probtable(Board *board, int x, int y, int turn)
 
 		double pr = 1.0; int j, lx=x, ly=y;
 		for(j=0; j<7; j++){
-			lx += dx[j]; ly += dy[j];
+			lx += dx[i]; ly += dy[i];
 			if((lx<0) || (lx>7) || (ly<0) || (ly>7)
 				|| (board->disk[lx][ly] == false)){
 				break;
@@ -103,7 +103,7 @@ ProbTable *board_get_probtable(Board *board, int x, int y, int turn)
 		pt->n[i] = j;
 		pt->table[i][j] = pr;
 
-		for(int k=j-1; k>0; k++){
+		for(int k=j-1; k>0; k--){
 			pt->sum[i][k] += pt->table[i][k];
 		}
 		nprob *= (1 - pt->sum[i][1]);
@@ -115,10 +115,11 @@ ProbTable *board_get_probtable(Board *board, int x, int y, int turn)
 
 BoardProb *board_get_prob(Board *board)
 {
-	BoardProb *bp = malloc(sizeof(ProbTable*) * 8);
+	BoardProb *bp = malloc(sizeof(ProbTable***) * 8);
 	for(int i=0; i<8; i++){
-		bp[i] = malloc(sizeof(ProbTable) * 8);
+		bp[i] = malloc(sizeof(ProbTable**) * 8);
 		for(int j=0; j<8; j++){
+			bp[i][j] = malloc(sizeof(ProbTable*) * 2);
 			bp[i][j][0] = board_get_probtable(board, i, j, true);
 			bp[i][j][1] = board_get_probtable(board, i, j, false);
 		}
@@ -157,15 +158,17 @@ Board *board_move(Board *board, int x, int y, double prob, BoardProb *bp)
 
 	// calculate flip
 	for(int i=0; i<8; i++){
+		double P1 = bp[x][y][0]->sum[i][1] / bp[x][y][0]->prob;
+		double P2 = 1 - P1;
+		double C1 = P1 / bp[x][y][0]->sum[i][1];
+		double C2 = P2 / (1 - bp[x][y][0]->sum[i][1]);
 		int lx=x, ly=y;
 		for(int j=0; j<7; j++){
-/*
-			lx += dx[j]; ly += dy[j];
+			lx += dx[i]; ly += dy[i];
 			if((lx<0) || (lx>7) || (ly<0) || (ly>7)
 				|| (board->disk[lx][ly] == false)){
 				break;
 			}
-*/
 		}
 	}
 
@@ -192,14 +195,18 @@ void board_set(Board *board, char *str)
 {
 }
 
-void board_print(Board *board)
+void board_print(Board *board, bool **movable)
 {
 	printf("\n  *A |B |C |D |E |F |G |H *\n");
 	for(int i=0; i<8; i++){
 		printf(" %d|", i+1);
 		for(int j=0; j<8; j++){
 			if(board->disk[i][j] == false){
-				printf("--|");
+				if(movable[i][j] == false){
+					printf("--|");
+				} else {
+					printf("[]|");
+				}
 			} else {
 				int res = board->prob[i][j] * 100 + 0.5;
 				if(res>99){ res = 99; }

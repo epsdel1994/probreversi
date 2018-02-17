@@ -17,6 +17,6 @@ Board *board_move(Board *board, int x, int y, double prob, BoardProb *bp);
 
 void board_get(Board *board, char *str);
 void board_set(Board *board, char *str);
-void board_print(Board *board);
+void board_print(Board *board, bool **movable);
 
 #endif
