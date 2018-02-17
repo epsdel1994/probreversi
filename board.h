@@ -5,8 +5,8 @@
 #include <stdbool.h>
 
 typedef struct { bool **disk; double **prob; } Board;
-typedef struct { double *prob; double **table; } ProbTable;
-typedef ProbTable **BoardProb;
+typedef struct { double prob; double **table; double **sum; } ProbTable;
+typedef ProbTable ***BoardProb;
 
 Board *board_create(double prob);
 void board_delete(Board *board);

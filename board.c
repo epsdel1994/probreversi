@@ -2,6 +2,9 @@
 
 #include <stdlib.h>
 
+int dx[] = {0, 0, -1, 1, -1, 1, -1, 1};
+int dy[] = {-1, 1, 0, 0, -1, 1, 1, -1};
+
 Board *board_create(double prob)
 {
 	Board *board = malloc(sizeof(Board));
@@ -48,26 +51,55 @@ void board_delete(Board *board)
 ProbTable *pt_create()
 {
 	ProbTable *pt = malloc(sizeof(ProbTable));
-	pt->prob = malloc(sizeof(double) * 2);
 	pt->table = malloc(sizeof(double*) * 8);
-	for(int i=0; i<8; i++){ pt->table[i] = malloc(sizeof(double) * 6); }
+	pt->sum = malloc(sizeof(double*) * 8);
+	for(int i=0; i<8; i++){
+		pt->table[i] = malloc(sizeof(double) * 8);
+		pt->sum[i] = malloc(sizeof(double) * 8);
+	}
 	return pt; 
 }
 
 void pt_delete(ProbTable *pt)
 {
-	for(int i=0; i<8; i++){ free(pt->table[i]); }
+	for(int i=0; i<8; i++){
+		free(pt->table[i]);
+		free(pt->sum[i]);
+	}
 	free(pt->table);
-	free(pt->prob);
+	free(pt->sum);
 	free(pt);
 }
 
-ProbTable *board_get_probtable(Board *board, int x, int y)
+ProbTable *board_get_probtable(Board *board, int x, int y, int turn)
 {
 	ProbTable *pt = pt_create();
 
-	// calculate probability for each cell
+	for(int i=0; i<8; i++){
+		for(int j=0; j<8; j++){ pt->table[i][j] = 0; }
 
+		double pr = 1.0; int j;
+		for(j=0; j<7; j++){
+			x += dx[j]; y += dy[j];
+			if((x<0) || (x>7) || (y<0) || (y>7)
+				|| (board->disk[x][y] == false)){
+				break;
+			}
+			if(turn){
+				pt->table[i][j] = pr * board->prob[x][y];
+				pr *= (1-board->prob[x][y]);
+			} else {
+				pt->table[i][j] = pr * (1-board->prob[x][y]);
+				pr *= board->prob[x][y];
+			}
+		}
+		pt->table[i][j] = pr;
+
+		pt->sum[i][j] = 0;
+		for(int k=j-1; k>0; k++){
+			pt->sum[i][k] += pt->table[i][k];
+		}
+	}
 	return pt;
 }
 
@@ -77,7 +109,8 @@ BoardProb *board_get_prob(Board *board)
 	for(int i=0; i<8; i++){
 		bp[i] = malloc(sizeof(ProbTable) * 8);
 		for(int j=0; j<8; j++){
-			bp[i][j] = board_get_probtable(board, i, j);
+			bp[i][j][0] = board_get_probtable(board, i, j, true);
+			bp[i][j][1] = board_get_probtable(board, i, j, false);
 		}
 	}
 	return bp;
@@ -85,7 +118,7 @@ BoardProb *board_get_prob(Board *board)
 
 Board *board_move(Board *board, int x, int y, double prob, BoardProb *bp)
 {
-	if( (prob * bp[x][y]->prob[0] + (1-prob) * bp[x][y]->prob[1]) <= 0.5){
+	if( (prob * bp[x][y][0]->prob + (1-prob) * bp[x][y][1]->prob) <= 0.5){
 		return NULL;
 	}
 
