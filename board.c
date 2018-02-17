@@ -163,6 +163,18 @@ Board *board_move(Board *board, int x, int y, double prob, BoardProb *bp)
 
 void board_get(Board *board, char *str)
 {
+	for(int i=0; i<8; i++){
+		for(int j=0; j<8; j++){
+			if(board->disk[i][j] == false){
+				printf("--");
+			} else {
+				int res = board->prob[i][j] * 100 + 0.5;
+				if(res>99){ res = 99; }
+				if(res<0){ res = 0; }
+				printf("%02d", res);
+			}
+		}
+	}
 }
 
 void board_set(Board *board, char *str)
@@ -179,8 +191,8 @@ void board_print(Board *board)
 				printf("--|");
 			} else {
 				int res = board->prob[i][j] * 100 + 0.5;
-				if(res>99){ res=99; }
-				if(res<0){ res=0; }
+				if(res>99){ res = 99; }
+				if(res<0){ res = 0; }
 				printf("%02d|", res);
 			}
 		}
