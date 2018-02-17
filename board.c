@@ -85,19 +85,19 @@ ProbTable *board_get_probtable(Board *board, int x, int y, int turn)
 			pt->sum[i][j] = 0;
 		}
 
-		double pr = 1.0; int j;
+		double pr = 1.0; int j, lx=x, ly=y;
 		for(j=0; j<7; j++){
-			x += dx[j]; y += dy[j];
-			if((x<0) || (x>7) || (y<0) || (y>7)
-				|| (board->disk[x][y] == false)){
+			lx += dx[j]; ly += dy[j];
+			if((lx<0) || (lx>7) || (ly<0) || (ly>7)
+				|| (board->disk[lx][ly] == false)){
 				break;
 			}
 			if(turn){
-				pt->table[i][j] = pr * board->prob[x][y];
-				pr *= (1-board->prob[x][y]);
+				pt->table[i][j] = pr * board->prob[lx][ly];
+				pr *= (1-board->prob[lx][ly]);
 			} else {
-				pt->table[i][j] = pr * (1-board->prob[x][y]);
-				pr *= board->prob[x][y];
+				pt->table[i][j] = pr * (1-board->prob[lx][ly]);
+				pr *= board->prob[lx][ly];
 			}
 		}
 		pt->n[i] = j;
@@ -148,7 +148,6 @@ Board *board_move(Board *board, int x, int y, double prob, BoardProb *bp)
 	}
 
 	Board *a = board_create(0);
-
 	for(int i=0; i<8; i++){
 		for(int j=0; j<8; j++){
 			a->disk[i][j] = board->disk[i][j];
@@ -157,6 +156,18 @@ Board *board_move(Board *board, int x, int y, double prob, BoardProb *bp)
 	}
 
 	// calculate flip
+	for(int i=0; i<8; i++){
+		int lx=x, ly=y;
+		for(int j=0; j<7; j++){
+/*
+			lx += dx[j]; ly += dy[j];
+			if((lx<0) || (lx>7) || (ly<0) || (ly>7)
+				|| (board->disk[lx][ly] == false)){
+				break;
+			}
+*/
+		}
+	}
 
 	return a;
 }
