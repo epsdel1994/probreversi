@@ -131,13 +131,8 @@ void board_can_move(BoardProb *bp, double prob, bool **res)
 {
 	for(int i=0; i<8; i++){
 		for(int j=0; j<8; j++){
-			if(
-				(prob * bp[i][j][0]->prob
-				+ (1-prob) * bp[i][j][1]->prob) <= 0.5){
-				res[i][j] = false;
-			} else {
-				res[i][j] = true;
-			}
+			res[i][j] = (prob * bp[i][j][0]->prob
+				+ (1-prob) * bp[i][j][1]->prob > 0.5);
 		}
 	}
 }
@@ -148,20 +143,30 @@ Board *board_move(Board *board, int x, int y, double prob, BoardProb *bp)
 		return NULL;
 	}
 
-	Board *a = board_create(0);
+	Board *r = board_create(0);
+	Board *a1 = board_create(0);
+	Board *a2 = board_create(0);
 	for(int i=0; i<8; i++){
 		for(int j=0; j<8; j++){
-			a->disk[i][j] = board->disk[i][j];
-			a->prob[i][j] = board->prob[i][j];
+			r->disk[i][j] = board->disk[i][j];
+			a1->disk[i][j] = board->disk[i][j];
+			a1->prob[i][j] = board->prob[i][j];
+			a2->disk[i][j] = board->disk[i][j];
+			a2->prob[i][j] = board->prob[i][j];
 		}
 	}
 
-	// calculate flip
 	for(int i=0; i<8; i++){
-		double P1 = bp[x][y][0]->sum[i][1] / bp[x][y][0]->prob;
-		double P2 = 1 - P1;
-		double C1 = P1 / bp[x][y][0]->sum[i][1];
-		double C2 = P2 / (1 - bp[x][y][0]->sum[i][1]);
+		double C1, C2;
+		if(bp[x][y][0]->n[i]>1){
+			double P1 = bp[x][y][0]->sum[i][1] / bp[x][y][0]->prob;
+			double P2 = 1 - P1;
+			C1 = P1 / bp[x][y][0]->sum[i][1];
+			C2 = P2 / (1 - bp[x][y][0]->sum[i][1]);
+		} else {
+			C1 = 0;
+			C2 = 1;
+		}
 		int lx=x, ly=y;
 		for(int j=0; j<7; j++){
 			lx += dx[i]; ly += dy[i];
@@ -172,7 +177,17 @@ Board *board_move(Board *board, int x, int y, double prob, BoardProb *bp)
 		}
 	}
 
-	return a;
+	for(int i=0; i<8; i++){
+		for(int j=0; j<8; j++){
+			r->prob[i][j] = prob * a1->prob[i][j]
+				+ (1 - prob) * a2->prob[i][j];
+		}
+	}
+
+	board_delete(a1);
+	board_delete(a2);
+
+	return r;
 }
 
 void board_get(Board *board, char *str)
