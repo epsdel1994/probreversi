@@ -6,14 +6,13 @@
 
 typedef struct { bool **disk; double **prob; } Board;
 typedef struct { double *prob; double **table; } ProbTable;
+typedef ProbTable **BoardProb;
 
 Board *board_create(double prob);
 void board_delete(Board *board);
 
-ProbTable *board_get_probtable(Board *board, uint8_t x, uint8_t y,
-	double prob);
+BoardProb *board_get_prob(Board *board);
 bool board_can_move(ProbTable *pt, double prob);
-bool board_move(Board *board, uint8_t x, uint8_t y,
-	double prob, ProbTable *pt);
+bool board_move(Board *board, int x, int y, double prob, BoardProb *bp);
 
 #endif

@@ -1,3 +1,6 @@
+
+CFLAGS = -std=c99 -g -O0
+
 all: pbr
 
 board.o: board.h
