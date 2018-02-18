@@ -13,6 +13,7 @@ bool game_undo(Game *game);
 bool game_redo(Game *game);
 bool game_brunch(Game *game);
 bool game_trunk(Game *game);
+void game_update_history(Game *game);
 void game_free_boards(Game *game);
 void game_new(Game *game);
 void game_reset(Game *game);

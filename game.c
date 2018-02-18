@@ -31,17 +31,20 @@ void game_set_prob(Game *game, double prob)
 	game->prob = prob;
 }
 
-void game_reset_prob(Game *game)
+void game_update_probtable(Game *game)
 {
 	game->bp = board_get_prob(game->cur);
 	board_can_move(game->cur, game->bp,
 		( game->turn ? game->prob : (1 - game->prob)), game->movable);
 }
 
-void game_set_board(Game *game, Board *board)
+void game_update_history(Game *game)
 {
-	game->cur = board;
-	game->turn = !(game->turn);
+	for(int i=game->hist_cur[game->hist_num]+1;
+		i<=game->hist_max[game->hist_num]; i++){
+		board_delete(game->hist[game->hist_num][i]);
+	}
+
 	game->hist_cur[game->hist_num] += 1;
 	game->hist_max[game->hist_num] = game->hist_cur[game->hist_num];
 	game->hist[game->hist_num]
@@ -64,9 +67,10 @@ void game_new(Game *game)
 	game->hist_num = 0;
 	game->hist_cur[0] = -1;
 	game->hist_max[0] = -1;
-	game->turn = false;
-	game_set_board(game, board_create(game->prob));
-	game_reset_prob(game);
+	game->cur = board_create(game->prob);
+	game->turn = true;
+	game_update_history(game);
+	game_update_probtable(game);
 }
 
 void game_reset(Game *game)
@@ -79,20 +83,37 @@ bool game_move(Game *game, int x, int y)
 {
 	if((x<0) || (x>7) || (y<0) || (y>7)){ return false; }
 	if(game->movable[x][y] == false){ return false; }
-	game_set_board(game, board_move( game->cur, x, y,
-		(game->turn ? game->prob : (1 - game->prob)), game->bp));
-	game_reset_prob(game);
+	game->cur = board_move(game->cur, x, y,
+		(game->turn ? game->prob : (1 - game->prob)), game->bp);
+	game->turn = !(game->turn);
+	game_update_history(game);
+	game_update_probtable(game);
 	return true;
 }
 
 bool game_undo(Game *game)
 {
-	return false;
+	if(game->hist_cur[game->hist_num] == 0){ return false; }
+	game->hist_cur[game->hist_num] -= 1;
+	game->cur = game->hist[game->hist_num]
+		[game->hist_cur[game->hist_num]];
+	game->turn = game->turnhist[game->hist_num]
+		[game->hist_cur[game->hist_num]];
+	game_update_probtable(game);
+	return true;
 }
 
 bool game_redo(Game *game)
 {
-	return false;
+	if(game->hist_cur[game->hist_num]
+		== game->hist_max[game->hist_num]){ return false; }
+	game->hist_cur[game->hist_num] += 1;
+	game->cur = game->hist[game->hist_num]
+		[game->hist_cur[game->hist_num]];
+	game->turn = game->turnhist[game->hist_num]
+		[game->hist_cur[game->hist_num]];
+	game_update_probtable(game);
+	return true;
 }
 
 bool game_brunch(Game *game)
