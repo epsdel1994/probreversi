@@ -103,7 +103,7 @@ ProbTable *board_get_probtable(Board *board, int x, int y, int turn)
 		pt->n[i] = j;
 		pt->table[i][j] = pr;
 
-		for(int k=j-1; k>0; k--){
+		for(int k=j-1; k>=0; k--){
 			pt->sum[i][k] += pt->table[i][k];
 		}
 		nprob *= (1 - pt->sum[i][1]);
@@ -156,6 +156,12 @@ Board *board_move(Board *board, int x, int y, double prob, BoardProb *bp)
 		}
 	}
 
+	r->disk[x][y] = true;
+	a1->disk[x][y] = true;
+	a2->disk[x][y] = true;
+	a1->prob[x][y] = 1.0;
+	a2->prob[x][y] = 0.0;
+
 	for(int i=0; i<8; i++){
 		double C1, C2;
 		if(bp[x][y][0]->n[i]>1){
@@ -164,16 +170,53 @@ Board *board_move(Board *board, int x, int y, double prob, BoardProb *bp)
 			C1 = P1 / bp[x][y][0]->sum[i][1];
 			C2 = P2 / (1 - bp[x][y][0]->sum[i][1]);
 		} else {
-			C1 = 0;
-			C2 = 1;
+			continue;
 		}
+
 		int lx=x, ly=y;
-		for(int j=0; j<7; j++){
+
+		lx += dx[i]; ly += dy[i];
+		a1->prob[lx][ly]
+			= C2 * 1 * bp[x][y][0]->table[i][0]
+			+ C1 * 1 * bp[x][y][0]->sum[i][1];
+
+		for(int j=1; j<bp[x][y][0]->n[i]; j++){
 			lx += dx[i]; ly += dy[i];
-			if((lx<0) || (lx>7) || (ly<0) || (ly>7)
-				|| (board->disk[lx][ly] == false)){
-				break;
-			}
+			a1->prob[lx][ly]
+				= C2 * a1->prob[lx][ly]
+					* bp[x][y][0]->table[i][j]
+				+ C1 * 1 * bp[x][y][0]->sum[i][j];
+		}
+	}
+
+	for(int i=0; i<8; i++){
+		double C1, C2;
+		if(bp[x][y][1]->n[i]>1){
+			double P1 = bp[x][y][1]->sum[i][1] / bp[x][y][1]->prob;
+			double P2 = 1 - P1;
+			C1 = P1 / bp[x][y][1]->sum[i][1];
+			C2 = P2 / (1 - bp[x][y][1]->sum[i][1]);
+		} else {
+			continue;
+		}
+
+		int lx=x, ly=y;
+
+		lx += dx[i]; ly += dy[i];
+		a2->prob[lx][ly]
+			= C2 * 0 * bp[x][y][1]->table[i][0]
+			+ C1 * 0 * bp[x][y][1]->sum[i][1]
+			+ C2 * 1 * bp[x][y][1]->table[i][
+				bp[x][y][1]->n[i]];
+
+		for(int j=1; j<bp[x][y][1]->n[i]; j++){
+			lx += dx[i]; ly += dy[i];
+			a2->prob[lx][ly]
+				= C2 * a1->prob[lx][ly]
+					* bp[x][y][1]->table[i][j]
+				+ C1 * 0 * bp[x][y][1]->sum[i][j]
+				+ C2 * 1 * bp[x][y][1]->table[i][
+					bp[x][y][1]->n[i]];
 		}
 	}
 
