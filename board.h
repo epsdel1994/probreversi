@@ -12,7 +12,7 @@ Board *board_create(double prob);
 void board_delete(Board *board);
 
 BoardProb *board_get_prob(Board *board);
-void board_can_move(BoardProb *bp, double prob, bool **table);
+void board_can_move(Board *board, BoardProb *bp, double prob, bool **table);
 Board *board_move(Board *board, int x, int y, double prob, BoardProb *bp);
 
 void board_get(Board *board, char *str);

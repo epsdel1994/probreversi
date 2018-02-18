@@ -14,7 +14,7 @@ int main(int argc, char **argv)
 	char buf[8];
 	while(1){
 		BoardProb *bp = board_get_prob(cur);
-		board_can_move(bp, turnprob[turn], movable);
+		board_can_move(cur, bp, turnprob[turn], movable);
 		board_print(cur, movable);
 		printf("\n> ");
 

@@ -129,12 +129,13 @@ BoardProb *board_get_prob(Board *board)
 	return bp;
 }
 
-void board_can_move(BoardProb *bp, double prob, bool **res)
+void board_can_move(Board *board, BoardProb *bp, double prob, bool **res)
 {
 	for(int i=0; i<8; i++){
 		for(int j=0; j<8; j++){
 			res[i][j] = (prob * bp[i][j][0]->prob
-				+ (1-prob) * bp[i][j][1]->prob > 0.5);
+				+ (1-prob) * bp[i][j][1]->prob > 0.5)
+				&& (board->disk[i][j] == false);
 		}
 	}
 }
@@ -143,7 +144,7 @@ Board *board_move(Board *board, int x, int y, double prob, BoardProb *bp)
 {
 	double move_prob = prob * bp[x][y][0]->prob
 		+ (1-prob) * bp[x][y][1]->prob;
-	if(move_prob <= 0.5){
+	if((move_prob <= 0.5) || (board->disk[x][y] == true)){
 		return NULL;
 	}
 
