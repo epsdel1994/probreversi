@@ -103,8 +103,10 @@ ProbTable *board_get_probtable(Board *board, int x, int y, int turn)
 		pt->n[i] = j;
 		pt->table[i][j] = pr;
 
-		for(int k=j-1; k>=0; k--){
-			pt->sum[i][k] += pt->table[i][k];
+		pt->sum[i][j] = 0;
+		for(int k=j; k>0; k--){
+			pt->sum[i][k-1]
+				= pt->sum[i][k] + pt->table[i][k-1];
 		}
 		nprob *= (1 - pt->sum[i][1]);
 	}
@@ -139,7 +141,9 @@ void board_can_move(BoardProb *bp, double prob, bool **res)
 
 Board *board_move(Board *board, int x, int y, double prob, BoardProb *bp)
 {
-	if( (prob * bp[x][y][0]->prob + (1-prob) * bp[x][y][1]->prob) <= 0.5){
+	double move_prob = prob * bp[x][y][0]->prob
+		+ (1-prob) * bp[x][y][1]->prob;
+	if(move_prob <= 0.5){
 		return NULL;
 	}
 
@@ -184,8 +188,11 @@ Board *board_move(Board *board, int x, int y, double prob, BoardProb *bp)
 			lx += dx[i]; ly += dy[i];
 			a1->prob[lx][ly]
 				= C2 * a1->prob[lx][ly]
-					* bp[x][y][0]->table[i][j]
-				+ C1 * 1 * bp[x][y][0]->sum[i][j];
+					* bp[x][y][0]->table[i][0]
+				+ C1 * 1 * bp[x][y][0]->sum[i][j]
+				+ C1 * a1->prob[lx][ly]
+					* (bp[x][y][0]->sum[i][1]
+						- bp[x][y][0]->sum[i][j]);
 		}
 	}
 
@@ -212,9 +219,12 @@ Board *board_move(Board *board, int x, int y, double prob, BoardProb *bp)
 		for(int j=1; j<bp[x][y][1]->n[i]; j++){
 			lx += dx[i]; ly += dy[i];
 			a2->prob[lx][ly]
-				= C2 * a1->prob[lx][ly]
-					* bp[x][y][1]->table[i][j]
+				= C2 * a2->prob[lx][ly]
+					* bp[x][y][1]->table[i][0]
 				+ C1 * 0 * bp[x][y][1]->sum[i][j]
+				+ C1 * a2->prob[lx][ly]
+					* (bp[x][y][1]->sum[i][1]
+						- bp[x][y][1]->sum[i][j])
 				+ C2 * 1 * bp[x][y][1]->table[i][
 					bp[x][y][1]->n[i]];
 		}
@@ -260,10 +270,11 @@ void board_print(Board *board, bool **movable)
 		printf(" %d|", i+1);
 		for(int j=0; j<8; j++){
 			if(board->disk[i][j] == false){
-				if(movable[i][j] == false){
-					printf("--|");
-				} else {
+				if((movable != NULL)
+					&& (movable[i][j] == true)){
 					printf("[]|");
+				} else {
+					printf("--|");
 				}
 			} else {
 				int res = board->prob[i][j] * 100 + 0.5;
