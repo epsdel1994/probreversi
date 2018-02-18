@@ -3,6 +3,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+struct _Board { bool **disk; double **prob; };
+struct _ProbTable { double prob, **table, **sum; int *n; };
+
 int dx[] = {0, 0, -1, 1, -1, 1, -1, 1};
 int dy[] = {-1, 1, 0, 0, -1, 1, 1, -1};
 
@@ -244,12 +247,17 @@ Board *board_move(Board *board, int x, int y, double prob, BoardProb *bp)
 	return r;
 }
 
-void board_get(Board *board, char *str)
+void board_get(Board *board, bool **movable, char *str)
 {
 	for(int i=0; i<8; i++){
 		for(int j=0; j<8; j++){
 			if(board->disk[i][j] == false){
-				printf("--");
+				if((movable != NULL)
+					&& (movable[i][j] == true)){
+					printf("[]");
+				} else {
+					printf("--");
+				}
 			} else {
 				int res = board->prob[i][j] * 100 + 0.5;
 				if(res>99){ res = 99; }

@@ -4,8 +4,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-typedef struct { bool **disk; double **prob; } Board;
-typedef struct { double prob, **table, **sum; int *n; } ProbTable;
+typedef struct _Board Board;
+typedef struct _ProbTable ProbTable;
 typedef ProbTable ***BoardProb;
 
 Board *board_create(double prob);
@@ -15,7 +15,7 @@ BoardProb *board_get_prob(Board *board);
 void board_can_move(Board *board, BoardProb *bp, double prob, bool **table);
 Board *board_move(Board *board, int x, int y, double prob, BoardProb *bp);
 
-void board_get(Board *board, char *str);
+void board_get(Board *board, bool **movable, char *str);
 void board_set(Board *board, char *str);
 void board_print(Board *board, bool **movable);
 
