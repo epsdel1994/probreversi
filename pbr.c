@@ -2,32 +2,32 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 int main(int argc, char **argv)
 {
+	double turnprob[] = {0.8, 0.2};
+	int turn = 0;
+	Board *cur = board_create(0.8);
 	bool **movable = malloc(sizeof(bool*) * 8);
-	bool **movable2 = malloc(sizeof(bool*) * 8);
-	bool **movable3 = malloc(sizeof(bool*) * 8);
 	for(int i=0; i<8; i++){ movable[i] = malloc(sizeof(bool) * 8); }
-	for(int i=0; i<8; i++){ movable2[i] = malloc(sizeof(bool) * 8); }
-	for(int i=0; i<8; i++){ movable3[i] = malloc(sizeof(bool) * 8); }
+	char buf[8];
+	while(1){
+		BoardProb *bp = board_get_prob(cur);
+		board_can_move(bp, turnprob[turn], movable);
+		board_print(cur, movable);
+		printf("\n> ");
 
-	Board *b = board_create(0.8);
-	BoardProb *bp = board_get_prob(b);
-	board_can_move(bp, 0.8, movable);
-	board_print(b, movable);
+		gets(buf);
+		if(!strcmp(buf, "exit")){ exit(0); }
+		int y = buf[0] - 'a';
+		int x = buf[1] - '1';
 
-	Board *b2 = board_move(b, 2, 3, 0.8, bp);
-	BoardProb *bp2 = board_get_prob(b2);
-	board_can_move(bp2, 0.2, movable2);
-	board_print(b2, movable2);
-	board_delete(b);
-
-	Board *b3 = board_move(b2, 2, 4, 0.2, bp);
-	BoardProb *bp3 = board_get_prob(b3);
-	board_can_move(bp3, 0.8, movable3);
-	board_print(b3, movable3);
-	board_delete(b2);
-
+		if((x<0) || (x>7) || (y<0) || (y>7)){ continue; }
+		if(movable[x][y] == false){ continue; }
+		Board *b2 = board_move(cur, x, y, turnprob[turn], bp);
+		board_delete(cur); cur = b2;
+		turn ^= 0x01;
+	}
 	return 0;
 }
