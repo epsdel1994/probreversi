@@ -36,6 +36,12 @@ pbr_gui.setup = function(fwcyan){
         pbr_gui.update();
         pbr_gui.fwcyan.draw();
     };
+    pbr_gui.button_new = fwcyan.Button.create("new", 1);
+    pbr_gui.button_new.select = function(){
+        Module.cwrap('ems_new', '', [])();
+        pbr_gui.update();
+        pbr_gui.fwcyan.draw();
+    };
     pbr_gui.button_about = fwcyan.Button.create("About");
     pbr_gui.button_about.select = function(){
         window.open("https://github.com/epsdel1994/probreversi");
@@ -47,7 +53,7 @@ pbr_gui.setup = function(fwcyan){
         pbr_gui.button_redo,
         pbr_gui.button_branch,
         pbr_gui.button_trunk,
-        fwcyan.Button.create("", 0),
+        pbr_gui.button_new,
         fwcyan.Button.create("", 0),
         fwcyan.Button.create("", 0),
         pbr_gui.button_about,
@@ -79,6 +85,10 @@ pbr_gui.update = function(){
     pbr_gui.button_branch.setScore(can_branch ? 1 : 0);
     var can_trunk = Module.cwrap('ems_can_trunk', 'number', [])();
     pbr_gui.button_trunk.setScore(can_trunk ? 1 : 0);
+
+//    var nextprob = Module.cwrap('ems_get_prob_next', 'number', [])();
+//    var count_black = Module.cwrap('ems_count', 'number', [])();
+//    var baseprob = Module.cwrap('ems_get_prob_base', 'number', [])();
 };
 
 kurumicl.onload = function(canvas){

@@ -65,3 +65,18 @@ int EMSCRIPTEN_KEEPALIVE ems_trunk()
 	return (game_trunk(game) ? 1 : 0);
 }
 
+int EMSCRIPTEN_KEEPALIVE ems_count()
+{
+	return 32;
+}
+
+void EMSCRIPTEN_KEEPALIVE ems_set_prob(double prob)
+{
+	game_set_prob(game, prob);
+}
+
+void EMSCRIPTEN_KEEPALIVE ems_new()
+{
+	game_new(game);
+}
+

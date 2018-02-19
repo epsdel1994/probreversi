@@ -24,6 +24,7 @@ Game *game_create(double prob)
 	}
 	game_set_prob(game, prob);
 	game->bp = NULL;
+	game->cur = NULL;
 	game_new(game);
 	return game;
 }
@@ -90,6 +91,7 @@ void game_new(Game *game)
 	game->hist_num = 0;
 	game->hist_cur[0] = -1;
 	game->hist_max[0] = -1;
+	if(game->cur){ board_delete(game->cur); }
 	game->cur = board_create(game->prob);
 	game->turn = true;
 	game_update_history(game);
