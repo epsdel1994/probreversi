@@ -141,4 +141,132 @@ var ProbReversi = function(fwcyan){
         rb._enabled = true;
         return rb;
     };
+
+    fwcyan.plugin.ProbReversi.Status = Object.create(Object.prototype);
+    fwcyan.plugin.ProbReversi.Status.prototype
+        = Object.create(fwcyan.Button.prototype);
+    fwcyan.plugin.ProbReversi.Status.create = function(proto){
+        proto = proto || fwcyan.plugin.ProbReversi.Status.prototype;
+        var prs = fwcyan.Button.create("status", 0, proto);
+        return prs;
+    };
+    fwcyan.plugin.ProbReversi.Status.prototype.resize = function(e){
+        this._drawer = e;
+    };
+    fwcyan.plugin.ProbReversi.Status.prototype.draw = function(){
+        this._drawer.ctx.strokeStyle = "rgb(0,0,0)";
+        this._drawer.ctx.fillStyle = this._drawer.color.disable;
+        this._drawer.ctx.fillRect(
+            this._drawer.rect.x, this._drawer.rect.y,
+            this._drawer.rect.width, this._drawer.rect.height);
+        this._drawer.ctx.strokeRect(
+            this._drawer.rect.x, this._drawer.rect.y,
+            this._drawer.rect.width, this._drawer.rect.height);
+
+        if( this._is_over === true ){
+            this._drawer.ctx.fillStyle = this._drawer.color.enable;
+            this._drawer.ctx.fillRect(
+                this._drawer.rect.x + this._drawer.rect.width*0.07,
+                this._drawer.rect.y + this._drawer.rect.height*0.17,
+                this._drawer.rect.width * 0.26, this._drawer.rect.height * 0.26
+            );
+            this._drawer.ctx.strokeRect(
+                this._drawer.rect.x + this._drawer.rect.width * 0.07,
+                this._drawer.rect.y + this._drawer.rect.height * 0.17,
+                this._drawer.rect.width * 0.26, this._drawer.rect.height * 0.26
+            );
+            this._drawer.ctx.fillStyle = this._drawer.color.enable;
+            this._drawer.ctx.fillRect(
+                this._drawer.rect.x + this._drawer.rect.width * 0.67,
+                this._drawer.rect.y + this._drawer.rect.height * 0.17,
+                this._drawer.rect.width * 0.26, this._drawer.rect.height * 0.26
+            );
+            this._drawer.ctx.strokeRect(
+                this._drawer.rect.x + this._drawer.rect.width * 0.67,
+                this._drawer.rect.y + this._drawer.rect.height * 0.17,
+                this._drawer.rect.width * 0.26, this._drawer.rect.height * 0.26
+            );
+
+            this._drawer.ctx.fillStyle = "rgb(0,0,0)";
+            this._drawer.ctx.beginPath();
+            this._drawer.ctx.arc(
+                this._drawer.rect.x + this._drawer.rect.width * 0.2,
+                this._drawer.rect.y + this._drawer.rect.height * 0.3,
+                this._drawer.rect.width * 0.117, Math.PI*2, false
+            );
+            this._drawer.ctx.fill();
+            this._drawer.ctx.stroke();
+
+            this._drawer.ctx.fillStyle = "rgb(255,255,255)";
+            this._drawer.ctx.beginPath();
+            this._drawer.ctx.arc(
+                this._drawer.rect.x + this._drawer.rect.width * 0.8,
+                this._drawer.rect.y + this._drawer.rect.height * 0.3,
+                this._drawer.rect.width * 0.117, Math.PI*2, false
+            );
+            this._drawer.ctx.fill();
+            this._drawer.ctx.stroke();
+
+            this._drawer.ctx.fillStyle = "rgb(0,0,0)";
+            this._drawer.ctx.font = (this._drawer.rect.width*0.3)
+                + "px sans-serif";
+            this._drawer.ctx.fillText(this._countBlack,
+                this._drawer.rect.x + this._drawer.rect.width * 0.2,
+                this._drawer.rect.y + this._drawer.rect.height * 0.65,
+                this._drawer.rect.width );
+            this._drawer.ctx.fillText("-",
+                this._drawer.rect.x + this._drawer.rect.width * 0.5,
+                this._drawer.rect.y + this._drawer.rect.height * 0.65,
+                this._drawer.rect.width );
+            this._drawer.ctx.fillText(this._countWhite,
+                this._drawer.rect.x + this._drawer.rect.width * 0.8,
+                this._drawer.rect.y + this._drawer.rect.height * 0.65,
+                this._drawer.rect.width );
+        } else {
+            this._drawer.ctx.fillStyle = "rgb(0,0,0)";
+            this._drawer.ctx.font = (this._drawer.rect.width*0.25)
+                + "px sans-serif";
+            this._drawer.ctx.fillText("Turn",
+                this._drawer.rect.x + this._drawer.rect.width*0.5,
+                this._drawer.rect.y + this._drawer.rect.height*0.2,
+                this._drawer.rect.width
+            );
+        
+            this._drawer.ctx.fillStyle = this._drawer.color.enable;
+            this._drawer.ctx.fillRect(
+                this._drawer.rect.x + this._drawer.rect.width*0.25,
+                this._drawer.rect.y + this._drawer.rect.height*0.4,
+                this._drawer.rect.width * 0.5, this._drawer.rect.height * 0.5
+            );
+            this._drawer.ctx.strokeStyle = "rgb(0,0,0)";
+            this._drawer.ctx.strokeRect(
+                this._drawer.rect.x + this._drawer.rect.width*0.25,
+                this._drawer.rect.y + this._drawer.rect.height*0.4,
+                this._drawer.rect.width * 0.5, this._drawer.rect.height * 0.5
+            );
+
+	    var scale = Math.floor(255 * (1 - this._prob));
+	    this._drawer.ctx.fillStyle =
+		"rgb(" + scale + "," + scale + "," + scale + ")";
+            this._drawer.ctx.beginPath();
+            this._drawer.ctx.arc(
+                this._drawer.rect.x + this._drawer.rect.width * 0.5,
+                this._drawer.rect.y + this._drawer.rect.height * 0.65,
+                this._drawer.rect.width * 0.225, Math.PI*2, false
+            );
+            this._drawer.ctx.fill();
+            this._drawer.ctx.stroke();
+        }
+    };
+    fwcyan.plugin.ProbReversi.Status.prototype.update
+        = function(is_over, prob_count){
+        if(is_over === true){
+            this._is_over = true;
+            this._countBlack = prob_count;
+            this._countWhite = 64 - this._countBlack;
+        } else {
+            this._is_over = false;
+            this._prob = prob_count;
+        }
+    };
 };
