@@ -8,8 +8,8 @@ CACHE MANIFEST
 CACHE:
 index.html
 FWcyan.js
-JSprinCore.js
-pbr-gui.js
+gui-board.js
+gui.js
 
 NETWORK:
 *

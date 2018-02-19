@@ -5,10 +5,10 @@ all: pbr pbr-gui
 
 pbr: pbr.o
 
-pbr-gui: pbr.o
-	mkdir pbr-gui
+pbr-gui: gui-main.html FWcyan.js gui-board.js cache.manifest gui-pre.js gui.c
+	mkdir -p pbr-gui
 	cp gui-main.html pbr-gui/index.html
-	cp FWcyan.js gui-board.js pbr-gui
+	cp FWcyan.js gui-board.js cache.manifest pbr-gui
 	emcc -o pbr-gui/gui.js --pre-js gui-pre.js gui.c
 
 pbr.o: board.h board.c game.h game.c

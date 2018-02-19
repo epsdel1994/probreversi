@@ -5,12 +5,13 @@
 
 "use strict";
 
-var pbr-gui = {};
+var pbr_gui = {};
 
-pbr-gui.setup = function(fwcyan){
+pbr_gui.setup = function(fwcyan){
 
     fwcyan.setColor(0);
 
+/*
     JSprinL.history = [];
 
     JSprinL.reversi_game = fwcyan.plugin.JSprinCore.ReversiGame.create();
@@ -180,13 +181,47 @@ pbr-gui.setup = function(fwcyan){
     }
 
     JSprinL.reversi_game.change();
+*/
+    pbr_gui.board = fwcyan.plugin.ProbReversi.Board.create();
+    pbr_gui.button_undo = fwcyan.Button.create("<", 1);
+    pbr_gui.button_undo.select = function(){
+        console.log("undo");
+    };
+    pbr_gui.button_redo = fwcyan.Button.create(">", 1);
+    pbr_gui.button_redo.select = function(){
+        console.log("redo");
+    };
+    pbr_gui.button_brunch = fwcyan.Button.create("brunch", 1);
+    pbr_gui.button_brunch.select = function(){
+        console.log("brunch");
+    };
+    pbr_gui.button_trunk = fwcyan.Button.create("trunk", 1);
+    pbr_gui.button_trunk.select = function(){
+        console.log("trunk");
+    };
+    pbr_gui.button_about = fwcyan.Button.create("About");
+    pbr_gui.button_about.select = function(){
+        window.open("https://github.com/epsdel1994/probreversi");
+    };
+
+    fwcyan.setMain(fwcyan.Popup.create(fwcyan.Template1.create([
+        pbr_gui.board,
+        pbr_gui.button_undo,
+        pbr_gui.button_redo,
+        pbr_gui.button_brunch,
+        pbr_gui.button_trunk,
+        fwcyan.Button.create("", 0),
+        fwcyan.Button.create("", 0),
+        fwcyan.Button.create("", 0),
+        pbr_gui.button_about,
+    ])));
 };
 
 kurumicl.onload = function(canvas){
-    pbr-gui.fwcyan = FWcyan(canvas, [ProbReversi]);
-    pbr-gui.setup(JSprinL.fwcyan);
+    pbr_gui.fwcyan = FWcyan(canvas, [ProbReversi]);
+    pbr_gui.setup(pbr_gui.fwcyan);
 };
 kurumicl.onresize = function(){
-    pbr-gui.fwcyan.resize();
-    pbr-gui.fwcyan.draw();
+    pbr_gui.fwcyan.resize();
+    pbr_gui.fwcyan.draw();
 };

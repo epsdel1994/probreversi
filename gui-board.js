@@ -95,9 +95,9 @@ var ProbReversi = function(fwcyan){
                     );
                     continue;
                 } else { 
-                    var scale = Math.floor((255 / 100) * this._cell[i][j]);
+                    var scale = Math.floor(255 * (1 - this._cell[i][j]));
                     this._drawer.ctx.fillStyle =
-                        "rgb(" + scale + "," + scale + "," scale + ")";
+                        "rgb(" + scale + "," + scale + "," + scale + ")";
                 }
                 this._drawer.ctx.beginPath();
                 this._drawer.ctx.arc(
@@ -113,7 +113,7 @@ var ProbReversi = function(fwcyan){
         proto = proto || fwcyan.plugin.ProbReversi.Board.prototype;
         var rb = fwcyan.Element.create(proto);
         rb._cell = [
-            [0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0],
+            [0.8, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0] ];
