@@ -246,6 +246,7 @@ var ProbReversi = function(fwcyan){
             );
 
 	    var scale = Math.floor(255 * (1 - this._prob));
+console.log(this._prob);
 	    this._drawer.ctx.fillStyle =
 		"rgb(" + scale + "," + scale + "," + scale + ")";
             this._drawer.ctx.beginPath();

@@ -96,8 +96,6 @@ pbr_gui.update = function(){
     var can_trunk = Module.cwrap('ems_can_trunk', 'number', [])();
     pbr_gui.button_trunk.setScore(can_trunk ? 1 : 0);
 
-//    var count_black = Module.cwrap('ems_count', 'number', [])();
-
     var nextprob = Module.cwrap('ems_get_prob_next', 'number', [])();
     if(nextprob < 0){
         var count_black = Module.cwrap('ems_count', 'number', [])();
@@ -111,6 +109,13 @@ kurumicl.onload = function(canvas){
     pbr_gui.fwcyan = FWcyan(canvas, [ProbReversi]);
     pbr_gui.setup(pbr_gui.fwcyan);
 };
+
+var Module = {
+    onRuntimeInitialized: function(){
+        pbr_gui.button_new.select();
+    }
+};
+
 kurumicl.onresize = function(){
     pbr_gui.fwcyan.resize();
     pbr_gui.fwcyan.draw();
