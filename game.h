@@ -15,6 +15,8 @@ Game *game_create();
 void game_delete(Game *game);
 bool game_move(Game *game, int x, int y);
 bool game_undo(Game *game);
+bool game_can_undo(Game *game);
+bool game_can_redo(Game *game);
 bool game_redo(Game *game);
 bool game_brunch(Game *game);
 bool game_trunk(Game *game);

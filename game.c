@@ -131,6 +131,11 @@ bool game_move(Game *game, int x, int y)
 	return true;
 }
 
+bool game_can_undo(Game *game)
+{
+	return game->hist_cur[game->hist_num] != 0;
+}
+
 bool game_undo(Game *game)
 {
 	if(game->hist_cur[game->hist_num] == 0){ return false; }
@@ -141,6 +146,12 @@ bool game_undo(Game *game)
 		[game->hist_cur[game->hist_num]];
 	game_update_probtable(game);
 	return true;
+}
+
+bool game_can_redo(Game *game)
+{
+	return game->hist_cur[game->hist_num]
+		!= game->hist_max[game->hist_num];
 }
 
 bool game_redo(Game *game)
@@ -156,7 +167,17 @@ bool game_redo(Game *game)
 	return true;
 }
 
+bool game_can_brunch(Game *game)
+{
+	return false;
+}
+
 bool game_brunch(Game *game)
+{
+	return false;
+}
+
+bool game_can_trunk(Game *game)
 {
 	return false;
 }
