@@ -42,7 +42,8 @@ pbr_gui.setup = function(fwcyan){
         pbr_gui.update();
         pbr_gui.fwcyan.draw();
     };
-    pbr_gui.button_status = fwcyan.Button.create("Status", 0);
+    pbr_gui.button_status = fwcyan.plugin.ProbReversi.Status.create
+        ();
     pbr_gui.button_style = fwcyan.Button.create("Style", 0);
     pbr_gui.button_baseprob = fwcyan.ButtonVolume.create
         ("Probability", 99, 51, 80);
@@ -95,8 +96,15 @@ pbr_gui.update = function(){
     var can_trunk = Module.cwrap('ems_can_trunk', 'number', [])();
     pbr_gui.button_trunk.setScore(can_trunk ? 1 : 0);
 
-//    var nextprob = Module.cwrap('ems_get_prob_next', 'number', [])();
 //    var count_black = Module.cwrap('ems_count', 'number', [])();
+
+    var nextprob = Module.cwrap('ems_get_prob_next', 'number', [])();
+    if(nextprob < 0){
+        var count_black = Module.cwrap('ems_count', 'number', [])();
+        pbr_gui.button_status.update(true, count_black);
+    } else {
+        pbr_gui.button_status.update(false, nextprob);
+    }
 };
 
 kurumicl.onload = function(canvas){

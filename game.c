@@ -37,7 +37,11 @@ void game_delete(Game *game)
 
 double game_get_prob_next(Game *game)
 {
-	return (game->turn ? game->prob : (1 - game->prob));
+	if(game->isover == false){
+		return (game->turn ? game->prob : (1 - game->prob));
+	} else {
+		return -1;
+	}
 }
 
 double game_get_prob(Game *game)
@@ -225,6 +229,29 @@ void game_print(Game *game, char *str)
 				(1 - game->prob)) * 100 + 0.5));
 	} else {
 		printf("Game Over\n");
+	}
+}
+
+int game_count(Game *game)
+{
+	int black=0, white=0;
+	for(int i=0; i<8; i++){
+		for(int j=0; j<8; j++){
+			if(game->cur->disk[i][j] == true){
+				if(game->cur->prob[i][j]>0.5){
+					black++;
+				} else if(game->cur->prob[i][j]<0.5){
+					white++;
+				}
+			} 
+		}
+	}
+	if(black > white){
+		return 64 - white;
+	} else if(black < white){
+		return black;
+	} else {
+		return 32;
 	}
 }
 

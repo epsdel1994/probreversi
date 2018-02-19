@@ -67,7 +67,7 @@ int EMSCRIPTEN_KEEPALIVE ems_trunk()
 
 int EMSCRIPTEN_KEEPALIVE ems_count()
 {
-	return 32;
+	return game_count(game);
 }
 
 double EMSCRIPTEN_KEEPALIVE ems_get_prob_base()
