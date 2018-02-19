@@ -2,7 +2,7 @@
 
 struct _Game {
 	Board *cur, *hist[60][60];
-	bool **movable, turn, turnhist[60][60];
+	bool **movable, turn, isover, turnhist[60][60];
 	BoardProb *bp;
 	int hist_num, hist_cur[60], hist_max[60];
 	double prob;
@@ -34,8 +34,21 @@ void game_set_prob(Game *game, double prob)
 void game_update_probtable(Game *game)
 {
 	game->bp = board_get_prob(game->cur);
-	board_can_move(game->cur, game->bp,
+	board_get_movable(game->cur, game->bp,
 		( game->turn ? game->prob : (1 - game->prob)), game->movable);
+
+	game->isover = false;
+	if(game_can_move(game) == false){
+		game->turn = !(game->turn);
+		game->bp = board_get_prob(game->cur);
+		board_get_movable(game->cur, game->bp,
+			( game->turn ? game->prob : (1 - game->prob)),
+			game->movable);
+		if(game_can_move(game) == false){
+			game->turn = !(game->turn);
+			game->isover = true;
+		}
+	}
 }
 
 void game_update_history(Game *game)
@@ -79,6 +92,18 @@ void game_reset(Game *game)
 	game_new(game);
 }
 
+bool game_can_move(Game *game)
+{
+	for(int i=0; i<8; i++){
+		for(int j=0; j<8; j++){
+			if(game->movable[i][j] == true){
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 bool game_move(Game *game, int x, int y)
 {
 	if((x<0) || (x>7) || (y<0) || (y>7)){ return false; }
@@ -86,8 +111,18 @@ bool game_move(Game *game, int x, int y)
 	game->cur = board_move(game->cur, x, y,
 		(game->turn ? game->prob : (1 - game->prob)), game->bp);
 	game->turn = !(game->turn);
-	game_update_history(game);
+
 	game_update_probtable(game);
+/*
+	if(game_can_move(game) == false){
+		game->turn = !(game->turn);
+		game_update_probtable(game);
+		if(game_can_move(game) == false){
+			game->turn = !(game->turn);
+		}
+	}
+*/
+	game_update_history(game);
 	return true;
 }
 
@@ -129,17 +164,24 @@ bool game_trunk(Game *game)
 void game_str(Game *game, char *str)
 {
 	board_get(game->cur, game->movable, str);
-	str[128] = 'p';
-	sprintf(str+129, "%02d", (int)((game->turn ? game->prob :
-		(1 - game->prob)) * 100 + 0.5));
-	
+	if(game->isover == false){
+		str[128] = 'p';
+		sprintf(str+129, "%02d", (int)((game->turn ? game->prob :
+			(1 - game->prob)) * 100 + 0.5));
+	} else {
+		sprintf(str+129, "o");
+	}
 }
 
 void game_print(Game *game, char *str)
 {
 	board_print(game->cur, game->movable);
-	printf("Black probability of next disk is [%02d]",
-		(int)((game->turn ? game->prob :
-			(1 - game->prob)) * 100 + 0.5));
+	if(game->isover == false){
+		printf("Black probability of next disk is [%02d]\n",
+			(int)((game->turn ? game->prob :
+				(1 - game->prob)) * 100 + 0.5));
+	} else {
+		printf("Game Over\n");
+	}
 }
 

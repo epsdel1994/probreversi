@@ -132,7 +132,7 @@ BoardProb *board_get_prob(Board *board)
 	return bp;
 }
 
-void board_can_move(Board *board, BoardProb *bp, double prob, bool **res)
+void board_get_movable(Board *board, BoardProb *bp, double prob, bool **res)
 {
 	for(int i=0; i<8; i++){
 		for(int j=0; j<8; j++){
@@ -249,27 +249,25 @@ Board *board_move(Board *board, int x, int y, double prob, BoardProb *bp)
 
 void board_get(Board *board, bool **movable, char *str)
 {
+	int pos = 0;
 	for(int i=0; i<8; i++){
 		for(int j=0; j<8; j++){
 			if(board->disk[i][j] == false){
 				if((movable != NULL)
 					&& (movable[i][j] == true)){
-					printf("[]");
+					sprintf(str+pos, "[]");
 				} else {
-					printf("--");
+					sprintf(str+pos, "--");
 				}
 			} else {
 				int res = board->prob[i][j] * 100 + 0.5;
 				if(res>99){ res = 99; }
 				if(res<0){ res = 0; }
-				printf("%02d", res);
+				sprintf(str+pos, "%02d", res);
 			}
+			pos += 2;
 		}
 	}
-}
-
-void board_set(Board *board, char *str)
-{
 }
 
 void board_print(Board *board, bool **movable)
