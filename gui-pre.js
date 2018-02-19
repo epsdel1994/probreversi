@@ -182,6 +182,7 @@ pbr_gui.setup = function(fwcyan){
 
     JSprinL.reversi_game.change();
 */
+
     pbr_gui.board = fwcyan.plugin.ProbReversi.Board.create();
     pbr_gui.button_undo = fwcyan.Button.create("<", 1);
     pbr_gui.button_undo.select = function(){
@@ -215,6 +216,19 @@ pbr_gui.setup = function(fwcyan){
         fwcyan.Button.create("", 0),
         pbr_gui.button_about,
     ])));
+
+    pbr_gui.update();
+};
+
+pbr_gui.update = function(){
+    var setup_res = Module.cwrap('ems_setup', 'number', ['number'])([0.8]);
+
+    var buf = Module._malloc(256);
+    Module.cwrap('ems_get_str', '', ['number'])([buf]);
+    var board = UTF8ToString(buf);
+    Module._free(buf);
+
+    pbr_gui.board.setBoard(board);
 };
 
 kurumicl.onload = function(canvas){

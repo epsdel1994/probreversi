@@ -33,8 +33,8 @@ var ProbReversi = function(fwcyan){
                 } else {
                     this._cell_is_empty[j][i] = false;
                     this._cell_can_move[j][i] = false;
-                    a1 = c1.charCodeAt(0) - "0".charCodeAt(0);
-                    a2 = c2.charCodeAt(0) - "0".charCodeAt(0);
+                    var a1 = c1.charCodeAt(0) - "0".charCodeAt(0);
+                    var a2 = c2.charCodeAt(0) - "0".charCodeAt(0);
                     this._cell[j][i] = a1 * 10 + a2;
                 }
             }
@@ -84,18 +84,21 @@ var ProbReversi = function(fwcyan){
                     this._drawer.rect.width/8, this._drawer.rect.height/8
                 );
 
-                if( this._cell_can_move[i][j] === true){
-                    this._drawer.ctx.strokeRect(
-                        this._drawer.rect.x + (this._drawer.rect.width/8)*i
-                            + this._drawer.rect.width * 0.125 * 0.1,
-                        this._drawer.rect.y + (this._drawer.rect.height/8)*j
-                            + this._drawer.rect.height * 0.125 * 0.1,
-                        this._drawer.rect.width * 0.125 * 0.8 ,
-                        this._drawer.rect.height * 0.125 * 0.8
-                    );
+                if(this._cell_is_empty[i][j] === true){
+                    if( this._cell_can_move[i][j] === true){
+                        this._drawer.ctx.strokeRect(
+                            this._drawer.rect.x + (this._drawer.rect.width/8)*i
+                                + this._drawer.rect.width * 0.125 * 0.1,
+                            this._drawer.rect.y + (this._drawer.rect.height/8)*j
+                                + this._drawer.rect.height * 0.125 * 0.1,
+                            this._drawer.rect.width * 0.125 * 0.8 ,
+                            this._drawer.rect.height * 0.125 * 0.8
+                        );
+                    }
                     continue;
                 } else { 
-                    var scale = Math.floor(255 * (1 - this._cell[i][j]));
+                    var scale = Math.floor
+                        ((255 * (100 - this._cell[i][j])) / 100);
                     this._drawer.ctx.fillStyle =
                         "rgb(" + scale + "," + scale + "," + scale + ")";
                 }

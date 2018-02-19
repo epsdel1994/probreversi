@@ -5,6 +5,8 @@
 
 #include "game.h"
 
+#include <stdlib.h>
+
 struct _Game {
 	Board *cur, *hist[60][60];
 	bool **movable, turn, isover, turnhist[60][60];
