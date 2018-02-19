@@ -53,7 +53,22 @@ pbr_gui.setup = function(fwcyan){
         pbr_gui.update();
         pbr_gui.fwcyan.draw();
     };
-    pbr_gui.button_about = fwcyan.Button.create("About");
+    pbr_gui.button_new = fwcyan.Button.create("New", 1);
+    pbr_gui.button_new.select = function(){
+        Module.cwrap('ems_new', '', [])();
+        pbr_gui.update();
+        pbr_gui.fwcyan.draw();
+    };
+    pbr_gui.button_status = fwcyan.Button.create("Status", 0);
+    pbr_gui.button_style = fwcyan.Button.create("Style", 0);
+    pbr_gui.button_baseprob = fwcyan.ButtonVolume.create
+        ("Probability", 99, 51, 80);
+    pbr_gui.button_baseprob.change = function(){
+        Module.cwrap('ems_set_prob_base', '', ['number'])(this._value/100);
+        pbr_gui.update();
+        pbr_gui.fwcyan.draw();
+    }
+    pbr_gui.button_about = fwcyan.Button.create("About", 1);
     pbr_gui.button_about.select = function(){
         window.open("https://github.com/epsdel1994/probreversi");
     };
@@ -62,11 +77,11 @@ pbr_gui.setup = function(fwcyan){
         pbr_gui.board,
         pbr_gui.button_undo,
         pbr_gui.button_redo,
-        pbr_gui.button_branch,
-        pbr_gui.button_trunk,
         fwcyan.Button.create("", 0),
-        fwcyan.Button.create("", 0),
-        fwcyan.Button.create("", 0),
+        pbr_gui.button_baseprob,
+        pbr_gui.button_new,
+        pbr_gui.button_style,
+        pbr_gui.button_status,
         pbr_gui.button_about,
     ])));
 
@@ -96,6 +111,9 @@ pbr_gui.update = function(){
     pbr_gui.button_branch.setScore(can_branch ? 1 : 0);
     var can_trunk = Module.cwrap('ems_can_trunk', 'number', [])();
     pbr_gui.button_trunk.setScore(can_trunk ? 1 : 0);
+
+//    var nextprob = Module.cwrap('ems_get_prob_next', 'number', [])();
+//    var count_black = Module.cwrap('ems_count', 'number', [])();
 };
 
 kurumicl.onload = function(canvas){
@@ -3807,8 +3825,8 @@ function _board_get($0,$1,$2) {
 }
 function _game_create($0) {
  $0 = +$0;
- var $1 = 0.0, $10 = 0, $11 = 0, $12 = 0, $13 = 0, $14 = 0, $15 = 0, $16 = 0, $17 = 0, $18 = 0, $19 = 0.0, $2 = 0, $20 = 0, $21 = 0, $3 = 0, $4 = 0, $5 = 0, $6 = 0, $7 = 0, $8 = 0;
- var $9 = 0, label = 0, sp = 0;
+ var $1 = 0.0, $10 = 0, $11 = 0, $12 = 0, $13 = 0, $14 = 0, $15 = 0, $16 = 0, $17 = 0, $18 = 0, $19 = 0.0, $2 = 0, $20 = 0, $21 = 0, $22 = 0, $23 = 0, $24 = 0, $3 = 0, $4 = 0, $5 = 0;
+ var $6 = 0, $7 = 0, $8 = 0, $9 = 0, label = 0, sp = 0;
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
@@ -3840,9 +3858,14 @@ function _game_create($0) {
  $19 = $1; //@line 25 "./game.c"
  _game_set_prob($18,$19); //@line 25 "./game.c"
  $20 = $2; //@line 26 "./game.c"
- _game_new($20); //@line 26 "./game.c"
- $21 = $2; //@line 27 "./game.c"
- STACKTOP = sp;return ($21|0); //@line 27 "./game.c"
+ $21 = ((($20)) + 18012|0); //@line 26 "./game.c"
+ HEAP32[$21>>2] = 0; //@line 26 "./game.c"
+ $22 = $2; //@line 27 "./game.c"
+ HEAP32[$22>>2] = 0; //@line 27 "./game.c"
+ $23 = $2; //@line 28 "./game.c"
+ _game_new($23); //@line 28 "./game.c"
+ $24 = $2; //@line 29 "./game.c"
+ STACKTOP = sp;return ($24|0); //@line 29 "./game.c"
 }
 function _game_set_prob($0,$1) {
  $0 = $0|0;
@@ -3852,147 +3875,196 @@ function _game_set_prob($0,$1) {
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $2 = $0;
  $3 = $1;
- $4 = $3; //@line 38 "./game.c"
- $5 = $2; //@line 38 "./game.c"
- $6 = ((($5)) + 18504|0); //@line 38 "./game.c"
- HEAPF64[$6>>3] = $4; //@line 38 "./game.c"
- STACKTOP = sp;return; //@line 39 "./game.c"
+ $4 = $3; //@line 50 "./game.c"
+ $5 = $2; //@line 50 "./game.c"
+ $6 = ((($5)) + 18504|0); //@line 50 "./game.c"
+ HEAPF64[$6>>3] = $4; //@line 50 "./game.c"
+ STACKTOP = sp;return; //@line 51 "./game.c"
 }
 function _game_new($0) {
  $0 = $0|0;
- var $1 = 0, $10 = 0.0, $11 = 0, $12 = 0, $13 = 0, $14 = 0, $15 = 0, $16 = 0, $2 = 0, $3 = 0, $4 = 0, $5 = 0, $6 = 0, $7 = 0, $8 = 0, $9 = 0, label = 0, sp = 0;
+ var $1 = 0, $10 = 0, $11 = 0, $12 = 0, $13 = 0, $14 = 0, $15 = 0.0, $16 = 0, $17 = 0, $18 = 0, $19 = 0, $2 = 0, $20 = 0, $21 = 0, $3 = 0, $4 = 0, $5 = 0, $6 = 0, $7 = 0, $8 = 0;
+ var $9 = 0, label = 0, sp = 0;
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 89 "./game.c"
- $3 = ((($2)) + 18016|0); //@line 89 "./game.c"
- HEAP32[$3>>2] = 0; //@line 89 "./game.c"
- $4 = $1; //@line 90 "./game.c"
- $5 = ((($4)) + 18020|0); //@line 90 "./game.c"
- HEAP32[$5>>2] = -1; //@line 90 "./game.c"
- $6 = $1; //@line 91 "./game.c"
- $7 = ((($6)) + 18260|0); //@line 91 "./game.c"
- HEAP32[$7>>2] = -1; //@line 91 "./game.c"
- $8 = $1; //@line 92 "./game.c"
- $9 = ((($8)) + 18504|0); //@line 92 "./game.c"
- $10 = +HEAPF64[$9>>3]; //@line 92 "./game.c"
- $11 = (_board_create($10)|0); //@line 92 "./game.c"
- $12 = $1; //@line 92 "./game.c"
- HEAP32[$12>>2] = $11; //@line 92 "./game.c"
- $13 = $1; //@line 93 "./game.c"
- $14 = ((($13)) + 14408|0); //@line 93 "./game.c"
- HEAP8[$14>>0] = 1; //@line 93 "./game.c"
- $15 = $1; //@line 94 "./game.c"
- _game_update_history($15); //@line 94 "./game.c"
- $16 = $1; //@line 95 "./game.c"
- _game_update_probtable($16); //@line 95 "./game.c"
- STACKTOP = sp;return; //@line 96 "./game.c"
+ $2 = $1; //@line 101 "./game.c"
+ $3 = ((($2)) + 18016|0); //@line 101 "./game.c"
+ HEAP32[$3>>2] = 0; //@line 101 "./game.c"
+ $4 = $1; //@line 102 "./game.c"
+ $5 = ((($4)) + 18020|0); //@line 102 "./game.c"
+ HEAP32[$5>>2] = -1; //@line 102 "./game.c"
+ $6 = $1; //@line 103 "./game.c"
+ $7 = ((($6)) + 18260|0); //@line 103 "./game.c"
+ HEAP32[$7>>2] = -1; //@line 103 "./game.c"
+ $8 = $1; //@line 104 "./game.c"
+ $9 = HEAP32[$8>>2]|0; //@line 104 "./game.c"
+ $10 = ($9|0)!=(0|0); //@line 104 "./game.c"
+ if ($10) {
+  $11 = $1; //@line 104 "./game.c"
+  $12 = HEAP32[$11>>2]|0; //@line 104 "./game.c"
+  _board_delete($12); //@line 104 "./game.c"
+ }
+ $13 = $1; //@line 105 "./game.c"
+ $14 = ((($13)) + 18504|0); //@line 105 "./game.c"
+ $15 = +HEAPF64[$14>>3]; //@line 105 "./game.c"
+ $16 = (_board_create($15)|0); //@line 105 "./game.c"
+ $17 = $1; //@line 105 "./game.c"
+ HEAP32[$17>>2] = $16; //@line 105 "./game.c"
+ $18 = $1; //@line 106 "./game.c"
+ $19 = ((($18)) + 14408|0); //@line 106 "./game.c"
+ HEAP8[$19>>0] = 1; //@line 106 "./game.c"
+ $20 = $1; //@line 107 "./game.c"
+ _game_update_history($20); //@line 107 "./game.c"
+ $21 = $1; //@line 108 "./game.c"
+ _game_update_probtable($21); //@line 108 "./game.c"
+ STACKTOP = sp;return; //@line 109 "./game.c"
+}
+function _game_get_prob_next($0) {
+ $0 = $0|0;
+ var $1 = 0, $10 = 0.0, $2 = 0, $3 = 0, $4 = 0, $5 = 0, $6 = 0, $7 = 0, $8 = 0.0, $9 = 0.0, label = 0, sp = 0;
+ sp = STACKTOP;
+ STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
+ $1 = $0;
+ $2 = $1; //@line 40 "./game.c"
+ $3 = ((($2)) + 14408|0); //@line 40 "./game.c"
+ $4 = HEAP8[$3>>0]|0; //@line 40 "./game.c"
+ $5 = $4&1; //@line 40 "./game.c"
+ $6 = $1;
+ $7 = ((($6)) + 18504|0);
+ $8 = +HEAPF64[$7>>3];
+ $9 = 1.0 - $8; //@line 40 "./game.c"
+ $10 = $5 ? $8 : $9; //@line 40 "./game.c"
+ STACKTOP = sp;return (+$10); //@line 40 "./game.c"
+}
+function _game_get_prob($0) {
+ $0 = $0|0;
+ var $1 = 0, $2 = 0, $3 = 0, $4 = 0.0, label = 0, sp = 0;
+ sp = STACKTOP;
+ STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
+ $1 = $0;
+ $2 = $1; //@line 45 "./game.c"
+ $3 = ((($2)) + 18504|0); //@line 45 "./game.c"
+ $4 = +HEAPF64[$3>>3]; //@line 45 "./game.c"
+ STACKTOP = sp;return (+$4); //@line 45 "./game.c"
 }
 function _game_update_probtable($0) {
  $0 = $0|0;
- var $1 = 0, $10 = 0, $11 = 0, $12 = 0, $13 = 0, $14 = 0, $15 = 0, $16 = 0, $17 = 0, $18 = 0, $19 = 0, $2 = 0, $20 = 0, $21 = 0.0, $22 = 0.0, $23 = 0.0, $24 = 0, $25 = 0, $26 = 0, $27 = 0;
+ var $1 = 0, $10 = 0, $11 = 0, $12 = 0, $13 = 0, $14 = 0, $15 = 0, $16 = 0, $17 = 0, $18 = 0, $19 = 0, $2 = 0, $20 = 0, $21 = 0, $22 = 0, $23 = 0, $24 = 0, $25 = 0.0, $26 = 0.0, $27 = 0.0;
  var $28 = 0, $29 = 0, $3 = 0, $30 = 0, $31 = 0, $32 = 0, $33 = 0, $34 = 0, $35 = 0, $36 = 0, $37 = 0, $38 = 0, $39 = 0, $4 = 0, $40 = 0, $41 = 0, $42 = 0, $43 = 0, $44 = 0, $45 = 0;
- var $46 = 0, $47 = 0, $48 = 0, $49 = 0, $5 = 0, $50 = 0, $51 = 0, $52 = 0, $53 = 0, $54 = 0, $55 = 0, $56 = 0, $57 = 0, $58 = 0, $59 = 0, $6 = 0, $60 = 0.0, $61 = 0.0, $62 = 0.0, $63 = 0;
- var $64 = 0, $65 = 0, $66 = 0, $67 = 0, $68 = 0, $69 = 0, $7 = 0, $70 = 0, $71 = 0, $72 = 0, $73 = 0, $74 = 0, $75 = 0, $76 = 0, $77 = 0, $78 = 0, $79 = 0, $8 = 0, $9 = 0, label = 0;
- var sp = 0;
+ var $46 = 0, $47 = 0, $48 = 0, $49 = 0, $5 = 0, $50 = 0, $51 = 0, $52 = 0, $53 = 0, $54 = 0, $55 = 0, $56 = 0, $57 = 0, $58 = 0, $59 = 0, $6 = 0, $60 = 0, $61 = 0, $62 = 0, $63 = 0;
+ var $64 = 0, $65 = 0, $66 = 0, $67 = 0, $68 = 0.0, $69 = 0.0, $7 = 0, $70 = 0.0, $71 = 0, $72 = 0, $73 = 0, $74 = 0, $75 = 0, $76 = 0, $77 = 0, $78 = 0, $79 = 0, $8 = 0, $80 = 0, $81 = 0;
+ var $82 = 0, $83 = 0, $84 = 0, $85 = 0, $86 = 0, $87 = 0, $9 = 0, label = 0, sp = 0;
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 43 "./game.c"
- $3 = ((($2)) + 18012|0); //@line 43 "./game.c"
- $4 = HEAP32[$3>>2]|0; //@line 43 "./game.c"
- _bp_delete($4); //@line 43 "./game.c"
- $5 = $1; //@line 44 "./game.c"
- $6 = HEAP32[$5>>2]|0; //@line 44 "./game.c"
- $7 = (_board_get_prob($6)|0); //@line 44 "./game.c"
- $8 = $1; //@line 44 "./game.c"
- $9 = ((($8)) + 18012|0); //@line 44 "./game.c"
- HEAP32[$9>>2] = $7; //@line 44 "./game.c"
- $10 = $1; //@line 45 "./game.c"
- $11 = HEAP32[$10>>2]|0; //@line 45 "./game.c"
- $12 = $1; //@line 45 "./game.c"
- $13 = ((($12)) + 18012|0); //@line 45 "./game.c"
- $14 = HEAP32[$13>>2]|0; //@line 45 "./game.c"
- $15 = $1; //@line 46 "./game.c"
- $16 = ((($15)) + 14408|0); //@line 46 "./game.c"
- $17 = HEAP8[$16>>0]|0; //@line 46 "./game.c"
- $18 = $17&1; //@line 46 "./game.c"
- $19 = $1;
- $20 = ((($19)) + 18504|0);
- $21 = +HEAPF64[$20>>3];
- $22 = 1.0 - $21; //@line 46 "./game.c"
- $23 = $18 ? $21 : $22; //@line 46 "./game.c"
- $24 = $1; //@line 46 "./game.c"
- $25 = ((($24)) + 14404|0); //@line 46 "./game.c"
- $26 = HEAP32[$25>>2]|0; //@line 46 "./game.c"
- _board_get_movable($11,$14,$23,$26); //@line 45 "./game.c"
- $27 = $1; //@line 48 "./game.c"
- $28 = ((($27)) + 14409|0); //@line 48 "./game.c"
- HEAP8[$28>>0] = 0; //@line 48 "./game.c"
- $29 = $1; //@line 49 "./game.c"
- $30 = (_game_can_move($29)|0); //@line 49 "./game.c"
- $31 = $30&1; //@line 49 "./game.c"
- $32 = ($31|0)==(0); //@line 49 "./game.c"
- if (!($32)) {
-  STACKTOP = sp;return; //@line 61 "./game.c"
+ $2 = $1; //@line 55 "./game.c"
+ $3 = ((($2)) + 18012|0); //@line 55 "./game.c"
+ $4 = HEAP32[$3>>2]|0; //@line 55 "./game.c"
+ $5 = ($4|0)!=(0|0); //@line 55 "./game.c"
+ if ($5) {
+  $6 = $1; //@line 55 "./game.c"
+  $7 = ((($6)) + 18012|0); //@line 55 "./game.c"
+  $8 = HEAP32[$7>>2]|0; //@line 55 "./game.c"
+  _bp_delete($8); //@line 55 "./game.c"
  }
- $33 = $1; //@line 50 "./game.c"
- $34 = ((($33)) + 14408|0); //@line 50 "./game.c"
- $35 = HEAP8[$34>>0]|0; //@line 50 "./game.c"
- $36 = $35&1; //@line 50 "./game.c"
- $37 = $36 ^ 1; //@line 50 "./game.c"
- $38 = $1; //@line 50 "./game.c"
- $39 = ((($38)) + 14408|0); //@line 50 "./game.c"
- $40 = $37&1; //@line 50 "./game.c"
- HEAP8[$39>>0] = $40; //@line 50 "./game.c"
- $41 = $1; //@line 51 "./game.c"
- $42 = HEAP32[$41>>2]|0; //@line 51 "./game.c"
- $43 = (_board_get_prob($42)|0); //@line 51 "./game.c"
- $44 = $1; //@line 51 "./game.c"
- $45 = ((($44)) + 18012|0); //@line 51 "./game.c"
- HEAP32[$45>>2] = $43; //@line 51 "./game.c"
- $46 = $1; //@line 52 "./game.c"
- $47 = ((($46)) + 18012|0); //@line 52 "./game.c"
- $48 = HEAP32[$47>>2]|0; //@line 52 "./game.c"
- _bp_delete($48); //@line 52 "./game.c"
- $49 = $1; //@line 53 "./game.c"
- $50 = HEAP32[$49>>2]|0; //@line 53 "./game.c"
- $51 = $1; //@line 53 "./game.c"
- $52 = ((($51)) + 18012|0); //@line 53 "./game.c"
- $53 = HEAP32[$52>>2]|0; //@line 53 "./game.c"
- $54 = $1; //@line 54 "./game.c"
- $55 = ((($54)) + 14408|0); //@line 54 "./game.c"
- $56 = HEAP8[$55>>0]|0; //@line 54 "./game.c"
- $57 = $56&1; //@line 54 "./game.c"
- $58 = $1;
- $59 = ((($58)) + 18504|0);
- $60 = +HEAPF64[$59>>3];
- $61 = 1.0 - $60; //@line 54 "./game.c"
- $62 = $57 ? $60 : $61; //@line 54 "./game.c"
- $63 = $1; //@line 55 "./game.c"
- $64 = ((($63)) + 14404|0); //@line 55 "./game.c"
- $65 = HEAP32[$64>>2]|0; //@line 55 "./game.c"
- _board_get_movable($50,$53,$62,$65); //@line 53 "./game.c"
- $66 = $1; //@line 56 "./game.c"
- $67 = (_game_can_move($66)|0); //@line 56 "./game.c"
- $68 = $67&1; //@line 56 "./game.c"
- $69 = ($68|0)==(0); //@line 56 "./game.c"
- if (!($69)) {
-  STACKTOP = sp;return; //@line 61 "./game.c"
+ $9 = $1; //@line 56 "./game.c"
+ $10 = HEAP32[$9>>2]|0; //@line 56 "./game.c"
+ $11 = (_board_get_prob($10)|0); //@line 56 "./game.c"
+ $12 = $1; //@line 56 "./game.c"
+ $13 = ((($12)) + 18012|0); //@line 56 "./game.c"
+ HEAP32[$13>>2] = $11; //@line 56 "./game.c"
+ $14 = $1; //@line 57 "./game.c"
+ $15 = HEAP32[$14>>2]|0; //@line 57 "./game.c"
+ $16 = $1; //@line 57 "./game.c"
+ $17 = ((($16)) + 18012|0); //@line 57 "./game.c"
+ $18 = HEAP32[$17>>2]|0; //@line 57 "./game.c"
+ $19 = $1; //@line 58 "./game.c"
+ $20 = ((($19)) + 14408|0); //@line 58 "./game.c"
+ $21 = HEAP8[$20>>0]|0; //@line 58 "./game.c"
+ $22 = $21&1; //@line 58 "./game.c"
+ $23 = $1;
+ $24 = ((($23)) + 18504|0);
+ $25 = +HEAPF64[$24>>3];
+ $26 = 1.0 - $25; //@line 58 "./game.c"
+ $27 = $22 ? $25 : $26; //@line 58 "./game.c"
+ $28 = $1; //@line 58 "./game.c"
+ $29 = ((($28)) + 14404|0); //@line 58 "./game.c"
+ $30 = HEAP32[$29>>2]|0; //@line 58 "./game.c"
+ _board_get_movable($15,$18,$27,$30); //@line 57 "./game.c"
+ $31 = $1; //@line 60 "./game.c"
+ $32 = ((($31)) + 14409|0); //@line 60 "./game.c"
+ HEAP8[$32>>0] = 0; //@line 60 "./game.c"
+ $33 = $1; //@line 61 "./game.c"
+ $34 = (_game_can_move($33)|0); //@line 61 "./game.c"
+ $35 = $34&1; //@line 61 "./game.c"
+ $36 = ($35|0)==(0); //@line 61 "./game.c"
+ if (!($36)) {
+  STACKTOP = sp;return; //@line 73 "./game.c"
  }
- $70 = $1; //@line 57 "./game.c"
- $71 = ((($70)) + 14408|0); //@line 57 "./game.c"
- $72 = HEAP8[$71>>0]|0; //@line 57 "./game.c"
- $73 = $72&1; //@line 57 "./game.c"
- $74 = $73 ^ 1; //@line 57 "./game.c"
- $75 = $1; //@line 57 "./game.c"
- $76 = ((($75)) + 14408|0); //@line 57 "./game.c"
- $77 = $74&1; //@line 57 "./game.c"
- HEAP8[$76>>0] = $77; //@line 57 "./game.c"
- $78 = $1; //@line 58 "./game.c"
- $79 = ((($78)) + 14409|0); //@line 58 "./game.c"
- HEAP8[$79>>0] = 1; //@line 58 "./game.c"
- STACKTOP = sp;return; //@line 61 "./game.c"
+ $37 = $1; //@line 62 "./game.c"
+ $38 = ((($37)) + 14408|0); //@line 62 "./game.c"
+ $39 = HEAP8[$38>>0]|0; //@line 62 "./game.c"
+ $40 = $39&1; //@line 62 "./game.c"
+ $41 = $40 ^ 1; //@line 62 "./game.c"
+ $42 = $1; //@line 62 "./game.c"
+ $43 = ((($42)) + 14408|0); //@line 62 "./game.c"
+ $44 = $41&1; //@line 62 "./game.c"
+ HEAP8[$43>>0] = $44; //@line 62 "./game.c"
+ $45 = $1; //@line 63 "./game.c"
+ $46 = ((($45)) + 18012|0); //@line 63 "./game.c"
+ $47 = HEAP32[$46>>2]|0; //@line 63 "./game.c"
+ $48 = ($47|0)!=(0|0); //@line 63 "./game.c"
+ if ($48) {
+  $49 = $1; //@line 63 "./game.c"
+  $50 = ((($49)) + 18012|0); //@line 63 "./game.c"
+  $51 = HEAP32[$50>>2]|0; //@line 63 "./game.c"
+  _bp_delete($51); //@line 63 "./game.c"
+ }
+ $52 = $1; //@line 64 "./game.c"
+ $53 = HEAP32[$52>>2]|0; //@line 64 "./game.c"
+ $54 = (_board_get_prob($53)|0); //@line 64 "./game.c"
+ $55 = $1; //@line 64 "./game.c"
+ $56 = ((($55)) + 18012|0); //@line 64 "./game.c"
+ HEAP32[$56>>2] = $54; //@line 64 "./game.c"
+ $57 = $1; //@line 65 "./game.c"
+ $58 = HEAP32[$57>>2]|0; //@line 65 "./game.c"
+ $59 = $1; //@line 65 "./game.c"
+ $60 = ((($59)) + 18012|0); //@line 65 "./game.c"
+ $61 = HEAP32[$60>>2]|0; //@line 65 "./game.c"
+ $62 = $1; //@line 66 "./game.c"
+ $63 = ((($62)) + 14408|0); //@line 66 "./game.c"
+ $64 = HEAP8[$63>>0]|0; //@line 66 "./game.c"
+ $65 = $64&1; //@line 66 "./game.c"
+ $66 = $1;
+ $67 = ((($66)) + 18504|0);
+ $68 = +HEAPF64[$67>>3];
+ $69 = 1.0 - $68; //@line 66 "./game.c"
+ $70 = $65 ? $68 : $69; //@line 66 "./game.c"
+ $71 = $1; //@line 67 "./game.c"
+ $72 = ((($71)) + 14404|0); //@line 67 "./game.c"
+ $73 = HEAP32[$72>>2]|0; //@line 67 "./game.c"
+ _board_get_movable($58,$61,$70,$73); //@line 65 "./game.c"
+ $74 = $1; //@line 68 "./game.c"
+ $75 = (_game_can_move($74)|0); //@line 68 "./game.c"
+ $76 = $75&1; //@line 68 "./game.c"
+ $77 = ($76|0)==(0); //@line 68 "./game.c"
+ if (!($77)) {
+  STACKTOP = sp;return; //@line 73 "./game.c"
+ }
+ $78 = $1; //@line 69 "./game.c"
+ $79 = ((($78)) + 14408|0); //@line 69 "./game.c"
+ $80 = HEAP8[$79>>0]|0; //@line 69 "./game.c"
+ $81 = $80&1; //@line 69 "./game.c"
+ $82 = $81 ^ 1; //@line 69 "./game.c"
+ $83 = $1; //@line 69 "./game.c"
+ $84 = ((($83)) + 14408|0); //@line 69 "./game.c"
+ $85 = $82&1; //@line 69 "./game.c"
+ HEAP8[$84>>0] = $85; //@line 69 "./game.c"
+ $86 = $1; //@line 70 "./game.c"
+ $87 = ((($86)) + 14409|0); //@line 70 "./game.c"
+ HEAP8[$87>>0] = 1; //@line 70 "./game.c"
+ STACKTOP = sp;return; //@line 73 "./game.c"
 }
 function _game_can_move($0) {
  $0 = $0|0;
@@ -4002,58 +4074,58 @@ function _game_can_move($0) {
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = sp + 12|0;
  $2 = $0;
- $3 = 0; //@line 106 "./game.c"
+ $3 = 0; //@line 119 "./game.c"
  L1: while(1) {
-  $5 = $3; //@line 106 "./game.c"
-  $6 = ($5|0)<(8); //@line 106 "./game.c"
+  $5 = $3; //@line 119 "./game.c"
+  $6 = ($5|0)<(8); //@line 119 "./game.c"
   if (!($6)) {
    label = 9;
    break;
   }
-  $4 = 0; //@line 107 "./game.c"
+  $4 = 0; //@line 120 "./game.c"
   while(1) {
-   $7 = $4; //@line 107 "./game.c"
-   $8 = ($7|0)<(8); //@line 107 "./game.c"
+   $7 = $4; //@line 120 "./game.c"
+   $8 = ($7|0)<(8); //@line 120 "./game.c"
    if (!($8)) {
     break;
    }
-   $9 = $2; //@line 108 "./game.c"
-   $10 = ((($9)) + 14404|0); //@line 108 "./game.c"
-   $11 = HEAP32[$10>>2]|0; //@line 108 "./game.c"
-   $12 = $3; //@line 108 "./game.c"
-   $13 = (($11) + ($12<<2)|0); //@line 108 "./game.c"
-   $14 = HEAP32[$13>>2]|0; //@line 108 "./game.c"
-   $15 = $4; //@line 108 "./game.c"
-   $16 = (($14) + ($15)|0); //@line 108 "./game.c"
-   $17 = HEAP8[$16>>0]|0; //@line 108 "./game.c"
-   $18 = $17&1; //@line 108 "./game.c"
-   $19 = $18&1; //@line 108 "./game.c"
-   $20 = ($19|0)==(1); //@line 108 "./game.c"
+   $9 = $2; //@line 121 "./game.c"
+   $10 = ((($9)) + 14404|0); //@line 121 "./game.c"
+   $11 = HEAP32[$10>>2]|0; //@line 121 "./game.c"
+   $12 = $3; //@line 121 "./game.c"
+   $13 = (($11) + ($12<<2)|0); //@line 121 "./game.c"
+   $14 = HEAP32[$13>>2]|0; //@line 121 "./game.c"
+   $15 = $4; //@line 121 "./game.c"
+   $16 = (($14) + ($15)|0); //@line 121 "./game.c"
+   $17 = HEAP8[$16>>0]|0; //@line 121 "./game.c"
+   $18 = $17&1; //@line 121 "./game.c"
+   $19 = $18&1; //@line 121 "./game.c"
+   $20 = ($19|0)==(1); //@line 121 "./game.c"
    if ($20) {
     label = 6;
     break L1;
    }
-   $21 = $4; //@line 107 "./game.c"
-   $22 = (($21) + 1)|0; //@line 107 "./game.c"
-   $4 = $22; //@line 107 "./game.c"
+   $21 = $4; //@line 120 "./game.c"
+   $22 = (($21) + 1)|0; //@line 120 "./game.c"
+   $4 = $22; //@line 120 "./game.c"
   }
-  $23 = $3; //@line 106 "./game.c"
-  $24 = (($23) + 1)|0; //@line 106 "./game.c"
-  $3 = $24; //@line 106 "./game.c"
+  $23 = $3; //@line 119 "./game.c"
+  $24 = (($23) + 1)|0; //@line 119 "./game.c"
+  $3 = $24; //@line 119 "./game.c"
  }
  if ((label|0) == 6) {
-  $$expand_i1_val = 1; //@line 109 "./game.c"
-  HEAP8[$1>>0] = $$expand_i1_val; //@line 109 "./game.c"
-  $$pre_trunc = HEAP8[$1>>0]|0; //@line 114 "./game.c"
-  $25 = $$pre_trunc&1; //@line 114 "./game.c"
-  STACKTOP = sp;return ($25|0); //@line 114 "./game.c"
+  $$expand_i1_val = 1; //@line 122 "./game.c"
+  HEAP8[$1>>0] = $$expand_i1_val; //@line 122 "./game.c"
+  $$pre_trunc = HEAP8[$1>>0]|0; //@line 127 "./game.c"
+  $25 = $$pre_trunc&1; //@line 127 "./game.c"
+  STACKTOP = sp;return ($25|0); //@line 127 "./game.c"
  }
  else if ((label|0) == 9) {
-  $$expand_i1_val2 = 0; //@line 113 "./game.c"
-  HEAP8[$1>>0] = $$expand_i1_val2; //@line 113 "./game.c"
-  $$pre_trunc = HEAP8[$1>>0]|0; //@line 114 "./game.c"
-  $25 = $$pre_trunc&1; //@line 114 "./game.c"
-  STACKTOP = sp;return ($25|0); //@line 114 "./game.c"
+  $$expand_i1_val2 = 0; //@line 126 "./game.c"
+  HEAP8[$1>>0] = $$expand_i1_val2; //@line 126 "./game.c"
+  $$pre_trunc = HEAP8[$1>>0]|0; //@line 127 "./game.c"
+  $25 = $$pre_trunc&1; //@line 127 "./game.c"
+  STACKTOP = sp;return ($25|0); //@line 127 "./game.c"
  }
  return (0)|0;
 }
@@ -4067,102 +4139,102 @@ function _game_update_history($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $3 = $1; //@line 65 "./game.c"
- $4 = ((($3)) + 18020|0); //@line 65 "./game.c"
- $5 = $1; //@line 65 "./game.c"
- $6 = ((($5)) + 18016|0); //@line 65 "./game.c"
- $7 = HEAP32[$6>>2]|0; //@line 65 "./game.c"
- $8 = (($4) + ($7<<2)|0); //@line 65 "./game.c"
- $9 = HEAP32[$8>>2]|0; //@line 65 "./game.c"
- $10 = (($9) + 1)|0; //@line 65 "./game.c"
- $2 = $10; //@line 65 "./game.c"
+ $3 = $1; //@line 77 "./game.c"
+ $4 = ((($3)) + 18020|0); //@line 77 "./game.c"
+ $5 = $1; //@line 77 "./game.c"
+ $6 = ((($5)) + 18016|0); //@line 77 "./game.c"
+ $7 = HEAP32[$6>>2]|0; //@line 77 "./game.c"
+ $8 = (($4) + ($7<<2)|0); //@line 77 "./game.c"
+ $9 = HEAP32[$8>>2]|0; //@line 77 "./game.c"
+ $10 = (($9) + 1)|0; //@line 77 "./game.c"
+ $2 = $10; //@line 77 "./game.c"
  while(1) {
-  $11 = $2; //@line 66 "./game.c"
-  $12 = $1; //@line 66 "./game.c"
-  $13 = ((($12)) + 18260|0); //@line 66 "./game.c"
-  $14 = $1; //@line 66 "./game.c"
-  $15 = ((($14)) + 18016|0); //@line 66 "./game.c"
-  $16 = HEAP32[$15>>2]|0; //@line 66 "./game.c"
-  $17 = (($13) + ($16<<2)|0); //@line 66 "./game.c"
-  $18 = HEAP32[$17>>2]|0; //@line 66 "./game.c"
-  $19 = ($11|0)<=($18|0); //@line 66 "./game.c"
+  $11 = $2; //@line 78 "./game.c"
+  $12 = $1; //@line 78 "./game.c"
+  $13 = ((($12)) + 18260|0); //@line 78 "./game.c"
+  $14 = $1; //@line 78 "./game.c"
+  $15 = ((($14)) + 18016|0); //@line 78 "./game.c"
+  $16 = HEAP32[$15>>2]|0; //@line 78 "./game.c"
+  $17 = (($13) + ($16<<2)|0); //@line 78 "./game.c"
+  $18 = HEAP32[$17>>2]|0; //@line 78 "./game.c"
+  $19 = ($11|0)<=($18|0); //@line 78 "./game.c"
   $20 = $1;
   if (!($19)) {
    break;
   }
-  $21 = ((($20)) + 4|0); //@line 67 "./game.c"
-  $22 = $1; //@line 67 "./game.c"
-  $23 = ((($22)) + 18016|0); //@line 67 "./game.c"
-  $24 = HEAP32[$23>>2]|0; //@line 67 "./game.c"
-  $25 = (($21) + (($24*240)|0)|0); //@line 67 "./game.c"
-  $26 = $2; //@line 67 "./game.c"
-  $27 = (($25) + ($26<<2)|0); //@line 67 "./game.c"
-  $28 = HEAP32[$27>>2]|0; //@line 67 "./game.c"
-  _board_delete($28); //@line 67 "./game.c"
-  $29 = $2; //@line 66 "./game.c"
-  $30 = (($29) + 1)|0; //@line 66 "./game.c"
-  $2 = $30; //@line 66 "./game.c"
+  $21 = ((($20)) + 4|0); //@line 79 "./game.c"
+  $22 = $1; //@line 79 "./game.c"
+  $23 = ((($22)) + 18016|0); //@line 79 "./game.c"
+  $24 = HEAP32[$23>>2]|0; //@line 79 "./game.c"
+  $25 = (($21) + (($24*240)|0)|0); //@line 79 "./game.c"
+  $26 = $2; //@line 79 "./game.c"
+  $27 = (($25) + ($26<<2)|0); //@line 79 "./game.c"
+  $28 = HEAP32[$27>>2]|0; //@line 79 "./game.c"
+  _board_delete($28); //@line 79 "./game.c"
+  $29 = $2; //@line 78 "./game.c"
+  $30 = (($29) + 1)|0; //@line 78 "./game.c"
+  $2 = $30; //@line 78 "./game.c"
  }
- $31 = ((($20)) + 18020|0); //@line 70 "./game.c"
- $32 = $1; //@line 70 "./game.c"
- $33 = ((($32)) + 18016|0); //@line 70 "./game.c"
- $34 = HEAP32[$33>>2]|0; //@line 70 "./game.c"
- $35 = (($31) + ($34<<2)|0); //@line 70 "./game.c"
- $36 = HEAP32[$35>>2]|0; //@line 70 "./game.c"
- $37 = (($36) + 1)|0; //@line 70 "./game.c"
- HEAP32[$35>>2] = $37; //@line 70 "./game.c"
- $38 = $1; //@line 71 "./game.c"
- $39 = ((($38)) + 18020|0); //@line 71 "./game.c"
- $40 = $1; //@line 71 "./game.c"
- $41 = ((($40)) + 18016|0); //@line 71 "./game.c"
- $42 = HEAP32[$41>>2]|0; //@line 71 "./game.c"
- $43 = (($39) + ($42<<2)|0); //@line 71 "./game.c"
- $44 = HEAP32[$43>>2]|0; //@line 71 "./game.c"
- $45 = $1; //@line 71 "./game.c"
- $46 = ((($45)) + 18260|0); //@line 71 "./game.c"
- $47 = $1; //@line 71 "./game.c"
- $48 = ((($47)) + 18016|0); //@line 71 "./game.c"
- $49 = HEAP32[$48>>2]|0; //@line 71 "./game.c"
- $50 = (($46) + ($49<<2)|0); //@line 71 "./game.c"
- HEAP32[$50>>2] = $44; //@line 71 "./game.c"
- $51 = $1; //@line 73 "./game.c"
- $52 = HEAP32[$51>>2]|0; //@line 73 "./game.c"
- $53 = $1; //@line 72 "./game.c"
- $54 = ((($53)) + 4|0); //@line 72 "./game.c"
- $55 = $1; //@line 72 "./game.c"
- $56 = ((($55)) + 18016|0); //@line 72 "./game.c"
- $57 = HEAP32[$56>>2]|0; //@line 72 "./game.c"
- $58 = (($54) + (($57*240)|0)|0); //@line 72 "./game.c"
- $59 = $1; //@line 73 "./game.c"
- $60 = ((($59)) + 18020|0); //@line 73 "./game.c"
- $61 = $1; //@line 73 "./game.c"
- $62 = ((($61)) + 18016|0); //@line 73 "./game.c"
- $63 = HEAP32[$62>>2]|0; //@line 73 "./game.c"
- $64 = (($60) + ($63<<2)|0); //@line 73 "./game.c"
- $65 = HEAP32[$64>>2]|0; //@line 73 "./game.c"
- $66 = (($58) + ($65<<2)|0); //@line 72 "./game.c"
- HEAP32[$66>>2] = $52; //@line 73 "./game.c"
- $67 = $1; //@line 75 "./game.c"
- $68 = ((($67)) + 14408|0); //@line 75 "./game.c"
- $69 = HEAP8[$68>>0]|0; //@line 75 "./game.c"
- $70 = $69&1; //@line 75 "./game.c"
- $71 = $1; //@line 74 "./game.c"
- $72 = ((($71)) + 14410|0); //@line 74 "./game.c"
- $73 = $1; //@line 74 "./game.c"
- $74 = ((($73)) + 18016|0); //@line 74 "./game.c"
- $75 = HEAP32[$74>>2]|0; //@line 74 "./game.c"
- $76 = (($72) + (($75*60)|0)|0); //@line 74 "./game.c"
- $77 = $1; //@line 75 "./game.c"
- $78 = ((($77)) + 18020|0); //@line 75 "./game.c"
- $79 = $1; //@line 75 "./game.c"
- $80 = ((($79)) + 18016|0); //@line 75 "./game.c"
- $81 = HEAP32[$80>>2]|0; //@line 75 "./game.c"
- $82 = (($78) + ($81<<2)|0); //@line 75 "./game.c"
- $83 = HEAP32[$82>>2]|0; //@line 75 "./game.c"
- $84 = (($76) + ($83)|0); //@line 74 "./game.c"
- $85 = $70&1; //@line 75 "./game.c"
- HEAP8[$84>>0] = $85; //@line 75 "./game.c"
- STACKTOP = sp;return; //@line 76 "./game.c"
+ $31 = ((($20)) + 18020|0); //@line 82 "./game.c"
+ $32 = $1; //@line 82 "./game.c"
+ $33 = ((($32)) + 18016|0); //@line 82 "./game.c"
+ $34 = HEAP32[$33>>2]|0; //@line 82 "./game.c"
+ $35 = (($31) + ($34<<2)|0); //@line 82 "./game.c"
+ $36 = HEAP32[$35>>2]|0; //@line 82 "./game.c"
+ $37 = (($36) + 1)|0; //@line 82 "./game.c"
+ HEAP32[$35>>2] = $37; //@line 82 "./game.c"
+ $38 = $1; //@line 83 "./game.c"
+ $39 = ((($38)) + 18020|0); //@line 83 "./game.c"
+ $40 = $1; //@line 83 "./game.c"
+ $41 = ((($40)) + 18016|0); //@line 83 "./game.c"
+ $42 = HEAP32[$41>>2]|0; //@line 83 "./game.c"
+ $43 = (($39) + ($42<<2)|0); //@line 83 "./game.c"
+ $44 = HEAP32[$43>>2]|0; //@line 83 "./game.c"
+ $45 = $1; //@line 83 "./game.c"
+ $46 = ((($45)) + 18260|0); //@line 83 "./game.c"
+ $47 = $1; //@line 83 "./game.c"
+ $48 = ((($47)) + 18016|0); //@line 83 "./game.c"
+ $49 = HEAP32[$48>>2]|0; //@line 83 "./game.c"
+ $50 = (($46) + ($49<<2)|0); //@line 83 "./game.c"
+ HEAP32[$50>>2] = $44; //@line 83 "./game.c"
+ $51 = $1; //@line 85 "./game.c"
+ $52 = HEAP32[$51>>2]|0; //@line 85 "./game.c"
+ $53 = $1; //@line 84 "./game.c"
+ $54 = ((($53)) + 4|0); //@line 84 "./game.c"
+ $55 = $1; //@line 84 "./game.c"
+ $56 = ((($55)) + 18016|0); //@line 84 "./game.c"
+ $57 = HEAP32[$56>>2]|0; //@line 84 "./game.c"
+ $58 = (($54) + (($57*240)|0)|0); //@line 84 "./game.c"
+ $59 = $1; //@line 85 "./game.c"
+ $60 = ((($59)) + 18020|0); //@line 85 "./game.c"
+ $61 = $1; //@line 85 "./game.c"
+ $62 = ((($61)) + 18016|0); //@line 85 "./game.c"
+ $63 = HEAP32[$62>>2]|0; //@line 85 "./game.c"
+ $64 = (($60) + ($63<<2)|0); //@line 85 "./game.c"
+ $65 = HEAP32[$64>>2]|0; //@line 85 "./game.c"
+ $66 = (($58) + ($65<<2)|0); //@line 84 "./game.c"
+ HEAP32[$66>>2] = $52; //@line 85 "./game.c"
+ $67 = $1; //@line 87 "./game.c"
+ $68 = ((($67)) + 14408|0); //@line 87 "./game.c"
+ $69 = HEAP8[$68>>0]|0; //@line 87 "./game.c"
+ $70 = $69&1; //@line 87 "./game.c"
+ $71 = $1; //@line 86 "./game.c"
+ $72 = ((($71)) + 14410|0); //@line 86 "./game.c"
+ $73 = $1; //@line 86 "./game.c"
+ $74 = ((($73)) + 18016|0); //@line 86 "./game.c"
+ $75 = HEAP32[$74>>2]|0; //@line 86 "./game.c"
+ $76 = (($72) + (($75*60)|0)|0); //@line 86 "./game.c"
+ $77 = $1; //@line 87 "./game.c"
+ $78 = ((($77)) + 18020|0); //@line 87 "./game.c"
+ $79 = $1; //@line 87 "./game.c"
+ $80 = ((($79)) + 18016|0); //@line 87 "./game.c"
+ $81 = HEAP32[$80>>2]|0; //@line 87 "./game.c"
+ $82 = (($78) + ($81<<2)|0); //@line 87 "./game.c"
+ $83 = HEAP32[$82>>2]|0; //@line 87 "./game.c"
+ $84 = (($76) + ($83)|0); //@line 86 "./game.c"
+ $85 = $70&1; //@line 87 "./game.c"
+ HEAP8[$84>>0] = $85; //@line 87 "./game.c"
+ STACKTOP = sp;return; //@line 88 "./game.c"
 }
 function _game_move($0,$1,$2) {
  $0 = $0|0;
@@ -4178,80 +4250,80 @@ function _game_move($0,$1,$2) {
  $4 = $0;
  $5 = $1;
  $6 = $2;
- $7 = $5; //@line 118 "./game.c"
- $8 = ($7|0)<(0); //@line 118 "./game.c"
- $9 = $5; //@line 118 "./game.c"
- $10 = ($9|0)>(7); //@line 118 "./game.c"
- $or$cond = $8 | $10; //@line 118 "./game.c"
- $11 = $6; //@line 118 "./game.c"
- $12 = ($11|0)<(0); //@line 118 "./game.c"
- $or$cond3 = $or$cond | $12; //@line 118 "./game.c"
- $13 = $6; //@line 118 "./game.c"
- $14 = ($13|0)>(7); //@line 118 "./game.c"
- $or$cond5 = $or$cond3 | $14; //@line 118 "./game.c"
+ $7 = $5; //@line 131 "./game.c"
+ $8 = ($7|0)<(0); //@line 131 "./game.c"
+ $9 = $5; //@line 131 "./game.c"
+ $10 = ($9|0)>(7); //@line 131 "./game.c"
+ $or$cond = $8 | $10; //@line 131 "./game.c"
+ $11 = $6; //@line 131 "./game.c"
+ $12 = ($11|0)<(0); //@line 131 "./game.c"
+ $or$cond3 = $or$cond | $12; //@line 131 "./game.c"
+ $13 = $6; //@line 131 "./game.c"
+ $14 = ($13|0)>(7); //@line 131 "./game.c"
+ $or$cond5 = $or$cond3 | $14; //@line 131 "./game.c"
  if ($or$cond5) {
-  $$expand_i1_val = 0; //@line 118 "./game.c"
-  HEAP8[$3>>0] = $$expand_i1_val; //@line 118 "./game.c"
-  $$pre_trunc = HEAP8[$3>>0]|0; //@line 136 "./game.c"
-  $55 = $$pre_trunc&1; //@line 136 "./game.c"
-  STACKTOP = sp;return ($55|0); //@line 136 "./game.c"
+  $$expand_i1_val = 0; //@line 131 "./game.c"
+  HEAP8[$3>>0] = $$expand_i1_val; //@line 131 "./game.c"
+  $$pre_trunc = HEAP8[$3>>0]|0; //@line 149 "./game.c"
+  $55 = $$pre_trunc&1; //@line 149 "./game.c"
+  STACKTOP = sp;return ($55|0); //@line 149 "./game.c"
  }
- $15 = $4; //@line 119 "./game.c"
- $16 = ((($15)) + 14404|0); //@line 119 "./game.c"
- $17 = HEAP32[$16>>2]|0; //@line 119 "./game.c"
- $18 = $5; //@line 119 "./game.c"
- $19 = (($17) + ($18<<2)|0); //@line 119 "./game.c"
- $20 = HEAP32[$19>>2]|0; //@line 119 "./game.c"
- $21 = $6; //@line 119 "./game.c"
- $22 = (($20) + ($21)|0); //@line 119 "./game.c"
- $23 = HEAP8[$22>>0]|0; //@line 119 "./game.c"
- $24 = $23&1; //@line 119 "./game.c"
- $25 = $24&1; //@line 119 "./game.c"
- $26 = ($25|0)==(0); //@line 119 "./game.c"
+ $15 = $4; //@line 132 "./game.c"
+ $16 = ((($15)) + 14404|0); //@line 132 "./game.c"
+ $17 = HEAP32[$16>>2]|0; //@line 132 "./game.c"
+ $18 = $5; //@line 132 "./game.c"
+ $19 = (($17) + ($18<<2)|0); //@line 132 "./game.c"
+ $20 = HEAP32[$19>>2]|0; //@line 132 "./game.c"
+ $21 = $6; //@line 132 "./game.c"
+ $22 = (($20) + ($21)|0); //@line 132 "./game.c"
+ $23 = HEAP8[$22>>0]|0; //@line 132 "./game.c"
+ $24 = $23&1; //@line 132 "./game.c"
+ $25 = $24&1; //@line 132 "./game.c"
+ $26 = ($25|0)==(0); //@line 132 "./game.c"
  if ($26) {
-  $$expand_i1_val7 = 0; //@line 119 "./game.c"
-  HEAP8[$3>>0] = $$expand_i1_val7; //@line 119 "./game.c"
-  $$pre_trunc = HEAP8[$3>>0]|0; //@line 136 "./game.c"
-  $55 = $$pre_trunc&1; //@line 136 "./game.c"
-  STACKTOP = sp;return ($55|0); //@line 136 "./game.c"
+  $$expand_i1_val7 = 0; //@line 132 "./game.c"
+  HEAP8[$3>>0] = $$expand_i1_val7; //@line 132 "./game.c"
+  $$pre_trunc = HEAP8[$3>>0]|0; //@line 149 "./game.c"
+  $55 = $$pre_trunc&1; //@line 149 "./game.c"
+  STACKTOP = sp;return ($55|0); //@line 149 "./game.c"
  } else {
-  $27 = $4; //@line 120 "./game.c"
-  $28 = HEAP32[$27>>2]|0; //@line 120 "./game.c"
-  $29 = $5; //@line 120 "./game.c"
-  $30 = $6; //@line 120 "./game.c"
-  $31 = $4; //@line 121 "./game.c"
-  $32 = ((($31)) + 14408|0); //@line 121 "./game.c"
-  $33 = HEAP8[$32>>0]|0; //@line 121 "./game.c"
-  $34 = $33&1; //@line 121 "./game.c"
+  $27 = $4; //@line 133 "./game.c"
+  $28 = HEAP32[$27>>2]|0; //@line 133 "./game.c"
+  $29 = $5; //@line 133 "./game.c"
+  $30 = $6; //@line 133 "./game.c"
+  $31 = $4; //@line 134 "./game.c"
+  $32 = ((($31)) + 14408|0); //@line 134 "./game.c"
+  $33 = HEAP8[$32>>0]|0; //@line 134 "./game.c"
+  $34 = $33&1; //@line 134 "./game.c"
   $35 = $4;
   $36 = ((($35)) + 18504|0);
   $37 = +HEAPF64[$36>>3];
-  $38 = 1.0 - $37; //@line 121 "./game.c"
-  $39 = $34 ? $37 : $38; //@line 121 "./game.c"
-  $40 = $4; //@line 121 "./game.c"
-  $41 = ((($40)) + 18012|0); //@line 121 "./game.c"
-  $42 = HEAP32[$41>>2]|0; //@line 121 "./game.c"
-  $43 = (_board_move($28,$29,$30,$39,$42)|0); //@line 120 "./game.c"
-  $44 = $4; //@line 120 "./game.c"
-  HEAP32[$44>>2] = $43; //@line 120 "./game.c"
-  $45 = $4; //@line 122 "./game.c"
-  $46 = ((($45)) + 14408|0); //@line 122 "./game.c"
-  $47 = HEAP8[$46>>0]|0; //@line 122 "./game.c"
-  $48 = $47&1; //@line 122 "./game.c"
-  $49 = $48 ^ 1; //@line 122 "./game.c"
-  $50 = $4; //@line 122 "./game.c"
-  $51 = ((($50)) + 14408|0); //@line 122 "./game.c"
-  $52 = $49&1; //@line 122 "./game.c"
-  HEAP8[$51>>0] = $52; //@line 122 "./game.c"
-  $53 = $4; //@line 124 "./game.c"
-  _game_update_probtable($53); //@line 124 "./game.c"
-  $54 = $4; //@line 134 "./game.c"
-  _game_update_history($54); //@line 134 "./game.c"
-  $$expand_i1_val9 = 1; //@line 135 "./game.c"
-  HEAP8[$3>>0] = $$expand_i1_val9; //@line 135 "./game.c"
-  $$pre_trunc = HEAP8[$3>>0]|0; //@line 136 "./game.c"
-  $55 = $$pre_trunc&1; //@line 136 "./game.c"
-  STACKTOP = sp;return ($55|0); //@line 136 "./game.c"
+  $38 = 1.0 - $37; //@line 134 "./game.c"
+  $39 = $34 ? $37 : $38; //@line 134 "./game.c"
+  $40 = $4; //@line 134 "./game.c"
+  $41 = ((($40)) + 18012|0); //@line 134 "./game.c"
+  $42 = HEAP32[$41>>2]|0; //@line 134 "./game.c"
+  $43 = (_board_move($28,$29,$30,$39,$42)|0); //@line 133 "./game.c"
+  $44 = $4; //@line 133 "./game.c"
+  HEAP32[$44>>2] = $43; //@line 133 "./game.c"
+  $45 = $4; //@line 135 "./game.c"
+  $46 = ((($45)) + 14408|0); //@line 135 "./game.c"
+  $47 = HEAP8[$46>>0]|0; //@line 135 "./game.c"
+  $48 = $47&1; //@line 135 "./game.c"
+  $49 = $48 ^ 1; //@line 135 "./game.c"
+  $50 = $4; //@line 135 "./game.c"
+  $51 = ((($50)) + 14408|0); //@line 135 "./game.c"
+  $52 = $49&1; //@line 135 "./game.c"
+  HEAP8[$51>>0] = $52; //@line 135 "./game.c"
+  $53 = $4; //@line 137 "./game.c"
+  _game_update_probtable($53); //@line 137 "./game.c"
+  $54 = $4; //@line 147 "./game.c"
+  _game_update_history($54); //@line 147 "./game.c"
+  $$expand_i1_val9 = 1; //@line 148 "./game.c"
+  HEAP8[$3>>0] = $$expand_i1_val9; //@line 148 "./game.c"
+  $$pre_trunc = HEAP8[$3>>0]|0; //@line 149 "./game.c"
+  $55 = $$pre_trunc&1; //@line 149 "./game.c"
+  STACKTOP = sp;return ($55|0); //@line 149 "./game.c"
  }
  return (0)|0;
 }
@@ -4261,15 +4333,15 @@ function _game_can_undo($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 140 "./game.c"
- $3 = ((($2)) + 18020|0); //@line 140 "./game.c"
- $4 = $1; //@line 140 "./game.c"
- $5 = ((($4)) + 18016|0); //@line 140 "./game.c"
- $6 = HEAP32[$5>>2]|0; //@line 140 "./game.c"
- $7 = (($3) + ($6<<2)|0); //@line 140 "./game.c"
- $8 = HEAP32[$7>>2]|0; //@line 140 "./game.c"
- $9 = ($8|0)!=(0); //@line 140 "./game.c"
- STACKTOP = sp;return ($9|0); //@line 140 "./game.c"
+ $2 = $1; //@line 153 "./game.c"
+ $3 = ((($2)) + 18020|0); //@line 153 "./game.c"
+ $4 = $1; //@line 153 "./game.c"
+ $5 = ((($4)) + 18016|0); //@line 153 "./game.c"
+ $6 = HEAP32[$5>>2]|0; //@line 153 "./game.c"
+ $7 = (($3) + ($6<<2)|0); //@line 153 "./game.c"
+ $8 = HEAP32[$7>>2]|0; //@line 153 "./game.c"
+ $9 = ($8|0)!=(0); //@line 153 "./game.c"
+ STACKTOP = sp;return ($9|0); //@line 153 "./game.c"
 }
 function _game_undo($0) {
  $0 = $0|0;
@@ -4280,74 +4352,74 @@ function _game_undo($0) {
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = sp + 4|0;
  $2 = $0;
- $3 = $2; //@line 145 "./game.c"
- $4 = ((($3)) + 18020|0); //@line 145 "./game.c"
- $5 = $2; //@line 145 "./game.c"
- $6 = ((($5)) + 18016|0); //@line 145 "./game.c"
- $7 = HEAP32[$6>>2]|0; //@line 145 "./game.c"
- $8 = (($4) + ($7<<2)|0); //@line 145 "./game.c"
- $9 = HEAP32[$8>>2]|0; //@line 145 "./game.c"
- $10 = ($9|0)==(0); //@line 145 "./game.c"
+ $3 = $2; //@line 158 "./game.c"
+ $4 = ((($3)) + 18020|0); //@line 158 "./game.c"
+ $5 = $2; //@line 158 "./game.c"
+ $6 = ((($5)) + 18016|0); //@line 158 "./game.c"
+ $7 = HEAP32[$6>>2]|0; //@line 158 "./game.c"
+ $8 = (($4) + ($7<<2)|0); //@line 158 "./game.c"
+ $9 = HEAP32[$8>>2]|0; //@line 158 "./game.c"
+ $10 = ($9|0)==(0); //@line 158 "./game.c"
  if ($10) {
-  $$expand_i1_val = 0; //@line 145 "./game.c"
-  HEAP8[$1>>0] = $$expand_i1_val; //@line 145 "./game.c"
-  $$pre_trunc = HEAP8[$1>>0]|0; //@line 153 "./game.c"
-  $55 = $$pre_trunc&1; //@line 153 "./game.c"
-  STACKTOP = sp;return ($55|0); //@line 153 "./game.c"
+  $$expand_i1_val = 0; //@line 158 "./game.c"
+  HEAP8[$1>>0] = $$expand_i1_val; //@line 158 "./game.c"
+  $$pre_trunc = HEAP8[$1>>0]|0; //@line 166 "./game.c"
+  $55 = $$pre_trunc&1; //@line 166 "./game.c"
+  STACKTOP = sp;return ($55|0); //@line 166 "./game.c"
  } else {
-  $11 = $2; //@line 146 "./game.c"
-  $12 = ((($11)) + 18020|0); //@line 146 "./game.c"
-  $13 = $2; //@line 146 "./game.c"
-  $14 = ((($13)) + 18016|0); //@line 146 "./game.c"
-  $15 = HEAP32[$14>>2]|0; //@line 146 "./game.c"
-  $16 = (($12) + ($15<<2)|0); //@line 146 "./game.c"
-  $17 = HEAP32[$16>>2]|0; //@line 146 "./game.c"
-  $18 = (($17) - 1)|0; //@line 146 "./game.c"
-  HEAP32[$16>>2] = $18; //@line 146 "./game.c"
-  $19 = $2; //@line 147 "./game.c"
-  $20 = ((($19)) + 4|0); //@line 147 "./game.c"
-  $21 = $2; //@line 147 "./game.c"
-  $22 = ((($21)) + 18016|0); //@line 147 "./game.c"
-  $23 = HEAP32[$22>>2]|0; //@line 147 "./game.c"
-  $24 = (($20) + (($23*240)|0)|0); //@line 147 "./game.c"
-  $25 = $2; //@line 148 "./game.c"
-  $26 = ((($25)) + 18020|0); //@line 148 "./game.c"
-  $27 = $2; //@line 148 "./game.c"
-  $28 = ((($27)) + 18016|0); //@line 148 "./game.c"
-  $29 = HEAP32[$28>>2]|0; //@line 148 "./game.c"
-  $30 = (($26) + ($29<<2)|0); //@line 148 "./game.c"
-  $31 = HEAP32[$30>>2]|0; //@line 148 "./game.c"
-  $32 = (($24) + ($31<<2)|0); //@line 147 "./game.c"
-  $33 = HEAP32[$32>>2]|0; //@line 147 "./game.c"
-  $34 = $2; //@line 147 "./game.c"
-  HEAP32[$34>>2] = $33; //@line 147 "./game.c"
-  $35 = $2; //@line 149 "./game.c"
-  $36 = ((($35)) + 14410|0); //@line 149 "./game.c"
-  $37 = $2; //@line 149 "./game.c"
-  $38 = ((($37)) + 18016|0); //@line 149 "./game.c"
-  $39 = HEAP32[$38>>2]|0; //@line 149 "./game.c"
-  $40 = (($36) + (($39*60)|0)|0); //@line 149 "./game.c"
-  $41 = $2; //@line 150 "./game.c"
-  $42 = ((($41)) + 18020|0); //@line 150 "./game.c"
-  $43 = $2; //@line 150 "./game.c"
-  $44 = ((($43)) + 18016|0); //@line 150 "./game.c"
-  $45 = HEAP32[$44>>2]|0; //@line 150 "./game.c"
-  $46 = (($42) + ($45<<2)|0); //@line 150 "./game.c"
-  $47 = HEAP32[$46>>2]|0; //@line 150 "./game.c"
-  $48 = (($40) + ($47)|0); //@line 149 "./game.c"
-  $49 = HEAP8[$48>>0]|0; //@line 149 "./game.c"
-  $50 = $49&1; //@line 149 "./game.c"
-  $51 = $2; //@line 149 "./game.c"
-  $52 = ((($51)) + 14408|0); //@line 149 "./game.c"
-  $53 = $50&1; //@line 149 "./game.c"
-  HEAP8[$52>>0] = $53; //@line 149 "./game.c"
-  $54 = $2; //@line 151 "./game.c"
-  _game_update_probtable($54); //@line 151 "./game.c"
-  $$expand_i1_val2 = 1; //@line 152 "./game.c"
-  HEAP8[$1>>0] = $$expand_i1_val2; //@line 152 "./game.c"
-  $$pre_trunc = HEAP8[$1>>0]|0; //@line 153 "./game.c"
-  $55 = $$pre_trunc&1; //@line 153 "./game.c"
-  STACKTOP = sp;return ($55|0); //@line 153 "./game.c"
+  $11 = $2; //@line 159 "./game.c"
+  $12 = ((($11)) + 18020|0); //@line 159 "./game.c"
+  $13 = $2; //@line 159 "./game.c"
+  $14 = ((($13)) + 18016|0); //@line 159 "./game.c"
+  $15 = HEAP32[$14>>2]|0; //@line 159 "./game.c"
+  $16 = (($12) + ($15<<2)|0); //@line 159 "./game.c"
+  $17 = HEAP32[$16>>2]|0; //@line 159 "./game.c"
+  $18 = (($17) - 1)|0; //@line 159 "./game.c"
+  HEAP32[$16>>2] = $18; //@line 159 "./game.c"
+  $19 = $2; //@line 160 "./game.c"
+  $20 = ((($19)) + 4|0); //@line 160 "./game.c"
+  $21 = $2; //@line 160 "./game.c"
+  $22 = ((($21)) + 18016|0); //@line 160 "./game.c"
+  $23 = HEAP32[$22>>2]|0; //@line 160 "./game.c"
+  $24 = (($20) + (($23*240)|0)|0); //@line 160 "./game.c"
+  $25 = $2; //@line 161 "./game.c"
+  $26 = ((($25)) + 18020|0); //@line 161 "./game.c"
+  $27 = $2; //@line 161 "./game.c"
+  $28 = ((($27)) + 18016|0); //@line 161 "./game.c"
+  $29 = HEAP32[$28>>2]|0; //@line 161 "./game.c"
+  $30 = (($26) + ($29<<2)|0); //@line 161 "./game.c"
+  $31 = HEAP32[$30>>2]|0; //@line 161 "./game.c"
+  $32 = (($24) + ($31<<2)|0); //@line 160 "./game.c"
+  $33 = HEAP32[$32>>2]|0; //@line 160 "./game.c"
+  $34 = $2; //@line 160 "./game.c"
+  HEAP32[$34>>2] = $33; //@line 160 "./game.c"
+  $35 = $2; //@line 162 "./game.c"
+  $36 = ((($35)) + 14410|0); //@line 162 "./game.c"
+  $37 = $2; //@line 162 "./game.c"
+  $38 = ((($37)) + 18016|0); //@line 162 "./game.c"
+  $39 = HEAP32[$38>>2]|0; //@line 162 "./game.c"
+  $40 = (($36) + (($39*60)|0)|0); //@line 162 "./game.c"
+  $41 = $2; //@line 163 "./game.c"
+  $42 = ((($41)) + 18020|0); //@line 163 "./game.c"
+  $43 = $2; //@line 163 "./game.c"
+  $44 = ((($43)) + 18016|0); //@line 163 "./game.c"
+  $45 = HEAP32[$44>>2]|0; //@line 163 "./game.c"
+  $46 = (($42) + ($45<<2)|0); //@line 163 "./game.c"
+  $47 = HEAP32[$46>>2]|0; //@line 163 "./game.c"
+  $48 = (($40) + ($47)|0); //@line 162 "./game.c"
+  $49 = HEAP8[$48>>0]|0; //@line 162 "./game.c"
+  $50 = $49&1; //@line 162 "./game.c"
+  $51 = $2; //@line 162 "./game.c"
+  $52 = ((($51)) + 14408|0); //@line 162 "./game.c"
+  $53 = $50&1; //@line 162 "./game.c"
+  HEAP8[$52>>0] = $53; //@line 162 "./game.c"
+  $54 = $2; //@line 164 "./game.c"
+  _game_update_probtable($54); //@line 164 "./game.c"
+  $$expand_i1_val2 = 1; //@line 165 "./game.c"
+  HEAP8[$1>>0] = $$expand_i1_val2; //@line 165 "./game.c"
+  $$pre_trunc = HEAP8[$1>>0]|0; //@line 166 "./game.c"
+  $55 = $$pre_trunc&1; //@line 166 "./game.c"
+  STACKTOP = sp;return ($55|0); //@line 166 "./game.c"
  }
  return (0)|0;
 }
@@ -4357,22 +4429,22 @@ function _game_can_redo($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 157 "./game.c"
- $3 = ((($2)) + 18020|0); //@line 157 "./game.c"
- $4 = $1; //@line 157 "./game.c"
- $5 = ((($4)) + 18016|0); //@line 157 "./game.c"
- $6 = HEAP32[$5>>2]|0; //@line 157 "./game.c"
- $7 = (($3) + ($6<<2)|0); //@line 157 "./game.c"
- $8 = HEAP32[$7>>2]|0; //@line 157 "./game.c"
- $9 = $1; //@line 158 "./game.c"
- $10 = ((($9)) + 18260|0); //@line 158 "./game.c"
- $11 = $1; //@line 158 "./game.c"
- $12 = ((($11)) + 18016|0); //@line 158 "./game.c"
- $13 = HEAP32[$12>>2]|0; //@line 158 "./game.c"
- $14 = (($10) + ($13<<2)|0); //@line 158 "./game.c"
- $15 = HEAP32[$14>>2]|0; //@line 158 "./game.c"
- $16 = ($8|0)!=($15|0); //@line 158 "./game.c"
- STACKTOP = sp;return ($16|0); //@line 157 "./game.c"
+ $2 = $1; //@line 170 "./game.c"
+ $3 = ((($2)) + 18020|0); //@line 170 "./game.c"
+ $4 = $1; //@line 170 "./game.c"
+ $5 = ((($4)) + 18016|0); //@line 170 "./game.c"
+ $6 = HEAP32[$5>>2]|0; //@line 170 "./game.c"
+ $7 = (($3) + ($6<<2)|0); //@line 170 "./game.c"
+ $8 = HEAP32[$7>>2]|0; //@line 170 "./game.c"
+ $9 = $1; //@line 171 "./game.c"
+ $10 = ((($9)) + 18260|0); //@line 171 "./game.c"
+ $11 = $1; //@line 171 "./game.c"
+ $12 = ((($11)) + 18016|0); //@line 171 "./game.c"
+ $13 = HEAP32[$12>>2]|0; //@line 171 "./game.c"
+ $14 = (($10) + ($13<<2)|0); //@line 171 "./game.c"
+ $15 = HEAP32[$14>>2]|0; //@line 171 "./game.c"
+ $16 = ($8|0)!=($15|0); //@line 171 "./game.c"
+ STACKTOP = sp;return ($16|0); //@line 170 "./game.c"
 }
 function _game_redo($0) {
  $0 = $0|0;
@@ -4384,81 +4456,81 @@ function _game_redo($0) {
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = sp + 4|0;
  $2 = $0;
- $3 = $2; //@line 163 "./game.c"
- $4 = ((($3)) + 18020|0); //@line 163 "./game.c"
- $5 = $2; //@line 163 "./game.c"
- $6 = ((($5)) + 18016|0); //@line 163 "./game.c"
- $7 = HEAP32[$6>>2]|0; //@line 163 "./game.c"
- $8 = (($4) + ($7<<2)|0); //@line 163 "./game.c"
- $9 = HEAP32[$8>>2]|0; //@line 163 "./game.c"
- $10 = $2; //@line 164 "./game.c"
- $11 = ((($10)) + 18260|0); //@line 164 "./game.c"
- $12 = $2; //@line 164 "./game.c"
- $13 = ((($12)) + 18016|0); //@line 164 "./game.c"
- $14 = HEAP32[$13>>2]|0; //@line 164 "./game.c"
- $15 = (($11) + ($14<<2)|0); //@line 164 "./game.c"
- $16 = HEAP32[$15>>2]|0; //@line 164 "./game.c"
- $17 = ($9|0)==($16|0); //@line 164 "./game.c"
+ $3 = $2; //@line 176 "./game.c"
+ $4 = ((($3)) + 18020|0); //@line 176 "./game.c"
+ $5 = $2; //@line 176 "./game.c"
+ $6 = ((($5)) + 18016|0); //@line 176 "./game.c"
+ $7 = HEAP32[$6>>2]|0; //@line 176 "./game.c"
+ $8 = (($4) + ($7<<2)|0); //@line 176 "./game.c"
+ $9 = HEAP32[$8>>2]|0; //@line 176 "./game.c"
+ $10 = $2; //@line 177 "./game.c"
+ $11 = ((($10)) + 18260|0); //@line 177 "./game.c"
+ $12 = $2; //@line 177 "./game.c"
+ $13 = ((($12)) + 18016|0); //@line 177 "./game.c"
+ $14 = HEAP32[$13>>2]|0; //@line 177 "./game.c"
+ $15 = (($11) + ($14<<2)|0); //@line 177 "./game.c"
+ $16 = HEAP32[$15>>2]|0; //@line 177 "./game.c"
+ $17 = ($9|0)==($16|0); //@line 177 "./game.c"
  if ($17) {
-  $$expand_i1_val = 0; //@line 164 "./game.c"
-  HEAP8[$1>>0] = $$expand_i1_val; //@line 164 "./game.c"
-  $$pre_trunc = HEAP8[$1>>0]|0; //@line 172 "./game.c"
-  $62 = $$pre_trunc&1; //@line 172 "./game.c"
-  STACKTOP = sp;return ($62|0); //@line 172 "./game.c"
+  $$expand_i1_val = 0; //@line 177 "./game.c"
+  HEAP8[$1>>0] = $$expand_i1_val; //@line 177 "./game.c"
+  $$pre_trunc = HEAP8[$1>>0]|0; //@line 185 "./game.c"
+  $62 = $$pre_trunc&1; //@line 185 "./game.c"
+  STACKTOP = sp;return ($62|0); //@line 185 "./game.c"
  } else {
-  $18 = $2; //@line 165 "./game.c"
-  $19 = ((($18)) + 18020|0); //@line 165 "./game.c"
-  $20 = $2; //@line 165 "./game.c"
-  $21 = ((($20)) + 18016|0); //@line 165 "./game.c"
-  $22 = HEAP32[$21>>2]|0; //@line 165 "./game.c"
-  $23 = (($19) + ($22<<2)|0); //@line 165 "./game.c"
-  $24 = HEAP32[$23>>2]|0; //@line 165 "./game.c"
-  $25 = (($24) + 1)|0; //@line 165 "./game.c"
-  HEAP32[$23>>2] = $25; //@line 165 "./game.c"
-  $26 = $2; //@line 166 "./game.c"
-  $27 = ((($26)) + 4|0); //@line 166 "./game.c"
-  $28 = $2; //@line 166 "./game.c"
-  $29 = ((($28)) + 18016|0); //@line 166 "./game.c"
-  $30 = HEAP32[$29>>2]|0; //@line 166 "./game.c"
-  $31 = (($27) + (($30*240)|0)|0); //@line 166 "./game.c"
-  $32 = $2; //@line 167 "./game.c"
-  $33 = ((($32)) + 18020|0); //@line 167 "./game.c"
-  $34 = $2; //@line 167 "./game.c"
-  $35 = ((($34)) + 18016|0); //@line 167 "./game.c"
-  $36 = HEAP32[$35>>2]|0; //@line 167 "./game.c"
-  $37 = (($33) + ($36<<2)|0); //@line 167 "./game.c"
-  $38 = HEAP32[$37>>2]|0; //@line 167 "./game.c"
-  $39 = (($31) + ($38<<2)|0); //@line 166 "./game.c"
-  $40 = HEAP32[$39>>2]|0; //@line 166 "./game.c"
-  $41 = $2; //@line 166 "./game.c"
-  HEAP32[$41>>2] = $40; //@line 166 "./game.c"
-  $42 = $2; //@line 168 "./game.c"
-  $43 = ((($42)) + 14410|0); //@line 168 "./game.c"
-  $44 = $2; //@line 168 "./game.c"
-  $45 = ((($44)) + 18016|0); //@line 168 "./game.c"
-  $46 = HEAP32[$45>>2]|0; //@line 168 "./game.c"
-  $47 = (($43) + (($46*60)|0)|0); //@line 168 "./game.c"
-  $48 = $2; //@line 169 "./game.c"
-  $49 = ((($48)) + 18020|0); //@line 169 "./game.c"
-  $50 = $2; //@line 169 "./game.c"
-  $51 = ((($50)) + 18016|0); //@line 169 "./game.c"
-  $52 = HEAP32[$51>>2]|0; //@line 169 "./game.c"
-  $53 = (($49) + ($52<<2)|0); //@line 169 "./game.c"
-  $54 = HEAP32[$53>>2]|0; //@line 169 "./game.c"
-  $55 = (($47) + ($54)|0); //@line 168 "./game.c"
-  $56 = HEAP8[$55>>0]|0; //@line 168 "./game.c"
-  $57 = $56&1; //@line 168 "./game.c"
-  $58 = $2; //@line 168 "./game.c"
-  $59 = ((($58)) + 14408|0); //@line 168 "./game.c"
-  $60 = $57&1; //@line 168 "./game.c"
-  HEAP8[$59>>0] = $60; //@line 168 "./game.c"
-  $61 = $2; //@line 170 "./game.c"
-  _game_update_probtable($61); //@line 170 "./game.c"
-  $$expand_i1_val2 = 1; //@line 171 "./game.c"
-  HEAP8[$1>>0] = $$expand_i1_val2; //@line 171 "./game.c"
-  $$pre_trunc = HEAP8[$1>>0]|0; //@line 172 "./game.c"
-  $62 = $$pre_trunc&1; //@line 172 "./game.c"
-  STACKTOP = sp;return ($62|0); //@line 172 "./game.c"
+  $18 = $2; //@line 178 "./game.c"
+  $19 = ((($18)) + 18020|0); //@line 178 "./game.c"
+  $20 = $2; //@line 178 "./game.c"
+  $21 = ((($20)) + 18016|0); //@line 178 "./game.c"
+  $22 = HEAP32[$21>>2]|0; //@line 178 "./game.c"
+  $23 = (($19) + ($22<<2)|0); //@line 178 "./game.c"
+  $24 = HEAP32[$23>>2]|0; //@line 178 "./game.c"
+  $25 = (($24) + 1)|0; //@line 178 "./game.c"
+  HEAP32[$23>>2] = $25; //@line 178 "./game.c"
+  $26 = $2; //@line 179 "./game.c"
+  $27 = ((($26)) + 4|0); //@line 179 "./game.c"
+  $28 = $2; //@line 179 "./game.c"
+  $29 = ((($28)) + 18016|0); //@line 179 "./game.c"
+  $30 = HEAP32[$29>>2]|0; //@line 179 "./game.c"
+  $31 = (($27) + (($30*240)|0)|0); //@line 179 "./game.c"
+  $32 = $2; //@line 180 "./game.c"
+  $33 = ((($32)) + 18020|0); //@line 180 "./game.c"
+  $34 = $2; //@line 180 "./game.c"
+  $35 = ((($34)) + 18016|0); //@line 180 "./game.c"
+  $36 = HEAP32[$35>>2]|0; //@line 180 "./game.c"
+  $37 = (($33) + ($36<<2)|0); //@line 180 "./game.c"
+  $38 = HEAP32[$37>>2]|0; //@line 180 "./game.c"
+  $39 = (($31) + ($38<<2)|0); //@line 179 "./game.c"
+  $40 = HEAP32[$39>>2]|0; //@line 179 "./game.c"
+  $41 = $2; //@line 179 "./game.c"
+  HEAP32[$41>>2] = $40; //@line 179 "./game.c"
+  $42 = $2; //@line 181 "./game.c"
+  $43 = ((($42)) + 14410|0); //@line 181 "./game.c"
+  $44 = $2; //@line 181 "./game.c"
+  $45 = ((($44)) + 18016|0); //@line 181 "./game.c"
+  $46 = HEAP32[$45>>2]|0; //@line 181 "./game.c"
+  $47 = (($43) + (($46*60)|0)|0); //@line 181 "./game.c"
+  $48 = $2; //@line 182 "./game.c"
+  $49 = ((($48)) + 18020|0); //@line 182 "./game.c"
+  $50 = $2; //@line 182 "./game.c"
+  $51 = ((($50)) + 18016|0); //@line 182 "./game.c"
+  $52 = HEAP32[$51>>2]|0; //@line 182 "./game.c"
+  $53 = (($49) + ($52<<2)|0); //@line 182 "./game.c"
+  $54 = HEAP32[$53>>2]|0; //@line 182 "./game.c"
+  $55 = (($47) + ($54)|0); //@line 181 "./game.c"
+  $56 = HEAP8[$55>>0]|0; //@line 181 "./game.c"
+  $57 = $56&1; //@line 181 "./game.c"
+  $58 = $2; //@line 181 "./game.c"
+  $59 = ((($58)) + 14408|0); //@line 181 "./game.c"
+  $60 = $57&1; //@line 181 "./game.c"
+  HEAP8[$59>>0] = $60; //@line 181 "./game.c"
+  $61 = $2; //@line 183 "./game.c"
+  _game_update_probtable($61); //@line 183 "./game.c"
+  $$expand_i1_val2 = 1; //@line 184 "./game.c"
+  HEAP8[$1>>0] = $$expand_i1_val2; //@line 184 "./game.c"
+  $$pre_trunc = HEAP8[$1>>0]|0; //@line 185 "./game.c"
+  $62 = $$pre_trunc&1; //@line 185 "./game.c"
+  STACKTOP = sp;return ($62|0); //@line 185 "./game.c"
  }
  return (0)|0;
 }
@@ -4468,7 +4540,7 @@ function _game_can_branch($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return 0; //@line 176 "./game.c"
+ STACKTOP = sp;return 0; //@line 189 "./game.c"
 }
 function _game_branch($0) {
  $0 = $0|0;
@@ -4476,7 +4548,7 @@ function _game_branch($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return 0; //@line 181 "./game.c"
+ STACKTOP = sp;return 0; //@line 194 "./game.c"
 }
 function _game_can_trunk($0) {
  $0 = $0|0;
@@ -4484,7 +4556,7 @@ function _game_can_trunk($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return 0; //@line 186 "./game.c"
+ STACKTOP = sp;return 0; //@line 199 "./game.c"
 }
 function _game_trunk($0) {
  $0 = $0|0;
@@ -4492,7 +4564,7 @@ function _game_trunk($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return 0; //@line 191 "./game.c"
+ STACKTOP = sp;return 0; //@line 204 "./game.c"
 }
 function _game_str($0,$1) {
  $0 = $0|0;
@@ -4505,44 +4577,44 @@ function _game_str($0,$1) {
  $vararg_buffer = sp;
  $2 = $0;
  $3 = $1;
- $4 = $2; //@line 196 "./game.c"
- $5 = HEAP32[$4>>2]|0; //@line 196 "./game.c"
- $6 = $2; //@line 196 "./game.c"
- $7 = ((($6)) + 14404|0); //@line 196 "./game.c"
- $8 = HEAP32[$7>>2]|0; //@line 196 "./game.c"
- $9 = $3; //@line 196 "./game.c"
- _board_get($5,$8,$9); //@line 196 "./game.c"
- $10 = $2; //@line 197 "./game.c"
- $11 = ((($10)) + 14409|0); //@line 197 "./game.c"
- $12 = HEAP8[$11>>0]|0; //@line 197 "./game.c"
- $13 = $12&1; //@line 197 "./game.c"
- $14 = $13&1; //@line 197 "./game.c"
- $15 = ($14|0)==(0); //@line 197 "./game.c"
+ $4 = $2; //@line 209 "./game.c"
+ $5 = HEAP32[$4>>2]|0; //@line 209 "./game.c"
+ $6 = $2; //@line 209 "./game.c"
+ $7 = ((($6)) + 14404|0); //@line 209 "./game.c"
+ $8 = HEAP32[$7>>2]|0; //@line 209 "./game.c"
+ $9 = $3; //@line 209 "./game.c"
+ _board_get($5,$8,$9); //@line 209 "./game.c"
+ $10 = $2; //@line 210 "./game.c"
+ $11 = ((($10)) + 14409|0); //@line 210 "./game.c"
+ $12 = HEAP8[$11>>0]|0; //@line 210 "./game.c"
+ $13 = $12&1; //@line 210 "./game.c"
+ $14 = $13&1; //@line 210 "./game.c"
+ $15 = ($14|0)==(0); //@line 210 "./game.c"
  $16 = $3;
  if ($15) {
-  $17 = ((($16)) + 128|0); //@line 198 "./game.c"
-  HEAP8[$17>>0] = 112; //@line 198 "./game.c"
-  $18 = $3; //@line 199 "./game.c"
-  $19 = ((($18)) + 129|0); //@line 199 "./game.c"
-  $20 = $2; //@line 199 "./game.c"
-  $21 = ((($20)) + 14408|0); //@line 199 "./game.c"
-  $22 = HEAP8[$21>>0]|0; //@line 199 "./game.c"
-  $23 = $22&1; //@line 199 "./game.c"
+  $17 = ((($16)) + 128|0); //@line 211 "./game.c"
+  HEAP8[$17>>0] = 112; //@line 211 "./game.c"
+  $18 = $3; //@line 212 "./game.c"
+  $19 = ((($18)) + 129|0); //@line 212 "./game.c"
+  $20 = $2; //@line 212 "./game.c"
+  $21 = ((($20)) + 14408|0); //@line 212 "./game.c"
+  $22 = HEAP8[$21>>0]|0; //@line 212 "./game.c"
+  $23 = $22&1; //@line 212 "./game.c"
   $24 = $2;
   $25 = ((($24)) + 18504|0);
   $26 = +HEAPF64[$25>>3];
-  $27 = 1.0 - $26; //@line 200 "./game.c"
-  $28 = $23 ? $26 : $27; //@line 199 "./game.c"
-  $29 = $28 * 100.0; //@line 200 "./game.c"
-  $30 = $29 + 0.5; //@line 200 "./game.c"
-  $31 = (~~(($30))); //@line 199 "./game.c"
-  HEAP32[$vararg_buffer>>2] = $31; //@line 199 "./game.c"
-  (_sprintf($19,574,$vararg_buffer)|0); //@line 199 "./game.c"
-  STACKTOP = sp;return; //@line 204 "./game.c"
+  $27 = 1.0 - $26; //@line 213 "./game.c"
+  $28 = $23 ? $26 : $27; //@line 212 "./game.c"
+  $29 = $28 * 100.0; //@line 213 "./game.c"
+  $30 = $29 + 0.5; //@line 213 "./game.c"
+  $31 = (~~(($30))); //@line 212 "./game.c"
+  HEAP32[$vararg_buffer>>2] = $31; //@line 212 "./game.c"
+  (_sprintf($19,574,$vararg_buffer)|0); //@line 212 "./game.c"
+  STACKTOP = sp;return; //@line 217 "./game.c"
  } else {
-  $32 = ((($16)) + 129|0); //@line 202 "./game.c"
-  (_sprintf($32,579,$vararg_buffer1)|0); //@line 202 "./game.c"
-  STACKTOP = sp;return; //@line 204 "./game.c"
+  $32 = ((($16)) + 129|0); //@line 215 "./game.c"
+  (_sprintf($32,579,$vararg_buffer1)|0); //@line 215 "./game.c"
+  STACKTOP = sp;return; //@line 217 "./game.c"
  }
 }
 function _ems_setup($0) {
@@ -4653,6 +4725,45 @@ function _ems_trunk() {
  $1 = (_game_trunk($0)|0); //@line 65 "gui.c"
  $2 = $1 ? 1 : 0; //@line 65 "gui.c"
  return ($2|0); //@line 65 "gui.c"
+}
+function _ems_count() {
+ var label = 0, sp = 0;
+ sp = STACKTOP;
+ return 32; //@line 70 "gui.c"
+}
+function _ems_get_prob_base() {
+ var $0 = 0, $1 = 0.0, label = 0, sp = 0;
+ sp = STACKTOP;
+ $0 = HEAP32[752]|0; //@line 75 "gui.c"
+ $1 = (+_game_get_prob($0)); //@line 75 "gui.c"
+ return (+$1); //@line 75 "gui.c"
+}
+function _ems_get_prob_next() {
+ var $0 = 0, $1 = 0.0, label = 0, sp = 0;
+ sp = STACKTOP;
+ $0 = HEAP32[752]|0; //@line 80 "gui.c"
+ $1 = (+_game_get_prob_next($0)); //@line 80 "gui.c"
+ return (+$1); //@line 80 "gui.c"
+}
+function _ems_set_prob_base($0) {
+ $0 = +$0;
+ var $1 = 0.0, $2 = 0, $3 = 0.0, $4 = 0, label = 0, sp = 0;
+ sp = STACKTOP;
+ STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
+ $1 = $0;
+ $2 = HEAP32[752]|0; //@line 85 "gui.c"
+ $3 = $1; //@line 85 "gui.c"
+ _game_set_prob($2,$3); //@line 85 "gui.c"
+ $4 = HEAP32[752]|0; //@line 86 "gui.c"
+ _game_update_probtable($4); //@line 86 "gui.c"
+ STACKTOP = sp;return; //@line 87 "gui.c"
+}
+function _ems_new() {
+ var $0 = 0, label = 0, sp = 0;
+ sp = STACKTOP;
+ $0 = HEAP32[752]|0; //@line 91 "gui.c"
+ _game_new($0); //@line 91 "gui.c"
+ return; //@line 92 "gui.c"
 }
 function _malloc($0) {
  $0 = $0|0;
@@ -11852,7 +11963,7 @@ function b1(p0,p1,p2) {
 var FUNCTION_TABLE_ii = [b0,___stdio_close];
 var FUNCTION_TABLE_iiii = [b1,b1,___stdout_write,___stdio_seek,_sn_write,___stdio_write,b1,b1];
 
-  return { ___errno_location: ___errno_location, ___udivdi3: ___udivdi3, ___uremdi3: ___uremdi3, _bitshift64Lshr: _bitshift64Lshr, _bitshift64Shl: _bitshift64Shl, _ems_branch: _ems_branch, _ems_can_branch: _ems_can_branch, _ems_can_redo: _ems_can_redo, _ems_can_trunk: _ems_can_trunk, _ems_can_undo: _ems_can_undo, _ems_get_str: _ems_get_str, _ems_move: _ems_move, _ems_redo: _ems_redo, _ems_setup: _ems_setup, _ems_trunk: _ems_trunk, _ems_undo: _ems_undo, _fflush: _fflush, _free: _free, _i64Add: _i64Add, _i64Subtract: _i64Subtract, _llvm_bswap_i32: _llvm_bswap_i32, _malloc: _malloc, _memcpy: _memcpy, _memset: _memset, _sbrk: _sbrk, dynCall_ii: dynCall_ii, dynCall_iiii: dynCall_iiii, establishStackSpace: establishStackSpace, getTempRet0: getTempRet0, runPostSets: runPostSets, setTempRet0: setTempRet0, setThrew: setThrew, stackAlloc: stackAlloc, stackRestore: stackRestore, stackSave: stackSave };
+  return { ___errno_location: ___errno_location, ___udivdi3: ___udivdi3, ___uremdi3: ___uremdi3, _bitshift64Lshr: _bitshift64Lshr, _bitshift64Shl: _bitshift64Shl, _ems_branch: _ems_branch, _ems_can_branch: _ems_can_branch, _ems_can_redo: _ems_can_redo, _ems_can_trunk: _ems_can_trunk, _ems_can_undo: _ems_can_undo, _ems_count: _ems_count, _ems_get_prob_base: _ems_get_prob_base, _ems_get_prob_next: _ems_get_prob_next, _ems_get_str: _ems_get_str, _ems_move: _ems_move, _ems_new: _ems_new, _ems_redo: _ems_redo, _ems_set_prob_base: _ems_set_prob_base, _ems_setup: _ems_setup, _ems_trunk: _ems_trunk, _ems_undo: _ems_undo, _fflush: _fflush, _free: _free, _i64Add: _i64Add, _i64Subtract: _i64Subtract, _llvm_bswap_i32: _llvm_bswap_i32, _malloc: _malloc, _memcpy: _memcpy, _memset: _memset, _sbrk: _sbrk, dynCall_ii: dynCall_ii, dynCall_iiii: dynCall_iiii, establishStackSpace: establishStackSpace, getTempRet0: getTempRet0, runPostSets: runPostSets, setTempRet0: setTempRet0, setThrew: setThrew, stackAlloc: stackAlloc, stackRestore: stackRestore, stackSave: stackSave };
 })
 // EMSCRIPTEN_END_ASM
 (Module.asmGlobalArg, Module.asmLibraryArg, buffer);
@@ -11917,6 +12028,24 @@ var real__ems_can_undo = asm["_ems_can_undo"]; asm["_ems_can_undo"] = function()
   return real__ems_can_undo.apply(null, arguments);
 };
 
+var real__ems_count = asm["_ems_count"]; asm["_ems_count"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__ems_count.apply(null, arguments);
+};
+
+var real__ems_get_prob_base = asm["_ems_get_prob_base"]; asm["_ems_get_prob_base"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__ems_get_prob_base.apply(null, arguments);
+};
+
+var real__ems_get_prob_next = asm["_ems_get_prob_next"]; asm["_ems_get_prob_next"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__ems_get_prob_next.apply(null, arguments);
+};
+
 var real__ems_get_str = asm["_ems_get_str"]; asm["_ems_get_str"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
@@ -11929,10 +12058,22 @@ var real__ems_move = asm["_ems_move"]; asm["_ems_move"] = function() {
   return real__ems_move.apply(null, arguments);
 };
 
+var real__ems_new = asm["_ems_new"]; asm["_ems_new"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__ems_new.apply(null, arguments);
+};
+
 var real__ems_redo = asm["_ems_redo"]; asm["_ems_redo"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
   return real__ems_redo.apply(null, arguments);
+};
+
+var real__ems_set_prob_base = asm["_ems_set_prob_base"]; asm["_ems_set_prob_base"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__ems_set_prob_base.apply(null, arguments);
 };
 
 var real__ems_setup = asm["_ems_setup"]; asm["_ems_setup"] = function() {
@@ -12046,9 +12187,14 @@ var _ems_can_branch = Module["_ems_can_branch"] = asm["_ems_can_branch"];
 var _ems_can_redo = Module["_ems_can_redo"] = asm["_ems_can_redo"];
 var _ems_can_trunk = Module["_ems_can_trunk"] = asm["_ems_can_trunk"];
 var _ems_can_undo = Module["_ems_can_undo"] = asm["_ems_can_undo"];
+var _ems_count = Module["_ems_count"] = asm["_ems_count"];
+var _ems_get_prob_base = Module["_ems_get_prob_base"] = asm["_ems_get_prob_base"];
+var _ems_get_prob_next = Module["_ems_get_prob_next"] = asm["_ems_get_prob_next"];
 var _ems_get_str = Module["_ems_get_str"] = asm["_ems_get_str"];
 var _ems_move = Module["_ems_move"] = asm["_ems_move"];
+var _ems_new = Module["_ems_new"] = asm["_ems_new"];
 var _ems_redo = Module["_ems_redo"] = asm["_ems_redo"];
+var _ems_set_prob_base = Module["_ems_set_prob_base"] = asm["_ems_set_prob_base"];
 var _ems_setup = Module["_ems_setup"] = asm["_ems_setup"];
 var _ems_trunk = Module["_ems_trunk"] = asm["_ems_trunk"];
 var _ems_undo = Module["_ems_undo"] = asm["_ems_undo"];
