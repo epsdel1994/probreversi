@@ -36,13 +36,16 @@ pbr_gui.setup = function(fwcyan){
         pbr_gui.update();
         pbr_gui.fwcyan.draw();
     };
-    pbr_gui.button_new = fwcyan.Button.create("new", 1);
+    pbr_gui.button_new = fwcyan.Button.create("New", 1);
     pbr_gui.button_new.select = function(){
         Module.cwrap('ems_new', '', [])();
         pbr_gui.update();
         pbr_gui.fwcyan.draw();
     };
-    pbr_gui.button_about = fwcyan.Button.create("About");
+    pbr_gui.button_status = fwcyan.Button.create("Status", 0);
+    pbr_gui.button_style = fwcyan.Button.create("Style", 0);
+    pbr_gui.button_baseprob = fwcyan.Button.create("BaseProb", 0);
+    pbr_gui.button_about = fwcyan.Button.create("About", 1);
     pbr_gui.button_about.select = function(){
         window.open("https://github.com/epsdel1994/probreversi");
     };
@@ -51,11 +54,11 @@ pbr_gui.setup = function(fwcyan){
         pbr_gui.board,
         pbr_gui.button_undo,
         pbr_gui.button_redo,
-        pbr_gui.button_branch,
-        pbr_gui.button_trunk,
+        fwcyan.Button.create("", 0),
+        pbr_gui.button_baseprob,
         pbr_gui.button_new,
-        fwcyan.Button.create("", 0),
-        fwcyan.Button.create("", 0),
+        pbr_gui.button_style,
+        pbr_gui.button_status,
         pbr_gui.button_about,
     ])));
 
