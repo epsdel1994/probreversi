@@ -108,17 +108,20 @@
                     kurumicl._blackout("Downloading(" + Math.floor(e.loaded/e.total*100) + "%)");
                 },false);
                 cache.addEventListener("noupdate",function(e){
+                    kurumicl._blackout("Preparing");
                     kurumicl._onload();
                 },false);
                 cache.addEventListener("downloading",function(e){
                     kurumicl._blackout("Downloading");
                 },false);
                 cache.addEventListener("cached",function(e){
+                    kurumicl._blackout("Preparing");
                     kurumicl._onload();
                 },false);
                 cache.addEventListener("error",function(e){
                     alert("Failed to fetch latest data. "
                         + "The data downloaded last time are used.");
+                    kurumicl._blackout("Preparing");
                     kurumicl._onload();
                 },false);
                 cache.addEventListener("updateready",function(e){
@@ -131,11 +134,25 @@
 
             kurumicl._onload = function(){
 
-                kurumicl._cover.hidden = true;
-
                 var scripts = ['FWcyan.js', 'gui-board.js', 'gui.js'];
                 var l = scripts.length;
                 var i = 0;
+
+                (function appendScript() {
+                    var script = document.createElement('script');
+                    if( ++i < l ){ script.onload = appendScript;
+                    } else {
+                        script.onload = function(e){
+                            kurumicl.onload();
+                        }
+                    }
+                    script.src = scripts[i-1];
+                    document.body.appendChild(script);
+                })();
+            };
+
+            kurumicl.ready = function(){
+                kurumicl._cover.hidden = true;
 
                 window.onresize = function(){
                     kurumicl._canvas.style.width = window.innerWidth + 'px';
@@ -153,21 +170,10 @@
                         kurumicl._blackout("An error occurred");
                     }, 0);
                 };
-
-                (function appendScript() {
-                    var script = document.createElement('script');
-                    if( ++i < l ){ script.onload = appendScript;
-                    } else {
-                        script.onload = function(e){
-                            kurumicl.onload(kurumicl._canvas);
-                            window.onresize();
-                            window.onscroll();
-                        }
-                    }
-                    script.src = scripts[i-1];
-                    document.body.appendChild(script);
-                })();
-            }
+                kurumicl.onstart(kurumicl._canvas);
+                window.onresize();
+                window.onscroll();
+            };
         </script>
         <title>pbr-gui</title>
     </head>
