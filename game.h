@@ -1,3 +1,8 @@
+/*
+	This file is part of probreversi. See
+	<https://github.com/epsdel1994/probreversi> for detail.
+*/
+
 #ifndef _GAME_H
 #define _GAME_H
 

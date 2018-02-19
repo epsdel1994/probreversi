@@ -1,3 +1,8 @@
+/*
+	This file is part of probreversi. See
+	<https://github.com/epsdel1994/probreversi> for detail.
+*/
+
 #ifndef _BOARD_H
 #define _BOARD_H
 
