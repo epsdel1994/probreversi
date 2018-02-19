@@ -105,14 +105,17 @@ pbr_gui.update = function(){
     }
 };
 
-kurumicl.onload = function(canvas){
+kurumicl.onload = function(){
+};
+
+kurumicl.onstart = function(canvas){
     pbr_gui.fwcyan = FWcyan(canvas, [ProbReversi]);
     pbr_gui.setup(pbr_gui.fwcyan);
 };
 
 var Module = {
     onRuntimeInitialized: function(){
-        pbr_gui.button_new.select();
+        kurumicl.ready();
     }
 };
 
