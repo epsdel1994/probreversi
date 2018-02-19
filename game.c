@@ -23,6 +23,7 @@ Game *game_create(double prob)
 		game->movable[i] = malloc(sizeof(bool) * 8);
 	}
 	game_set_prob(game, prob);
+	game->bp = NULL;
 	game_new(game);
 	return game;
 }
@@ -40,7 +41,7 @@ void game_set_prob(Game *game, double prob)
 
 void game_update_probtable(Game *game)
 {
-	bp_delete(game->bp);
+	if(game->bp){ bp_delete(game->bp); };
 	game->bp = board_get_prob(game->cur);
 	board_get_movable(game->cur, game->bp,
 		( game->turn ? game->prob : (1 - game->prob)), game->movable);
@@ -48,8 +49,8 @@ void game_update_probtable(Game *game)
 	game->isover = false;
 	if(game_can_move(game) == false){
 		game->turn = !(game->turn);
+		if(game->bp){ bp_delete(game->bp); };
 		game->bp = board_get_prob(game->cur);
-		bp_delete(game->bp);
 		board_get_movable(game->cur, game->bp,
 			( game->turn ? game->prob : (1 - game->prob)),
 			game->movable);
