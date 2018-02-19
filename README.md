@@ -4,5 +4,5 @@ Implementation of Probability Reversi.
 
 ## Execution
 
-under construction
+[pbr-gui](https://epsdel1994.github.io/probreversi/)
 
