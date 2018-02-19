@@ -6,7 +6,7 @@ all: pbr pbr-gui
 pbr: pbr.c board.h board.c game.h game.c
 	cc $(CFLAGS) $(LDFLAGS) -o pbr pbr.c
 
-pbr-gui: gui-main.html FWcyan.js gui-board.js cache.manifest gui-pre.js gui.c
+pbr-gui: gui-main.html FWcyan.js gui-board.js cache.manifest gui-pre.js gui.c pbr.c board.h board.c game.h game.c
 	mkdir -p pbr-gui
 	cp gui-main.html pbr-gui/index.html
 	cp FWcyan.js gui-board.js cache.manifest pbr-gui

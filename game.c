@@ -40,6 +40,7 @@ void game_set_prob(Game *game, double prob)
 
 void game_update_probtable(Game *game)
 {
+	bp_delete(game->bp);
 	game->bp = board_get_prob(game->cur);
 	board_get_movable(game->cur, game->bp,
 		( game->turn ? game->prob : (1 - game->prob)), game->movable);
@@ -48,6 +49,7 @@ void game_update_probtable(Game *game)
 	if(game_can_move(game) == false){
 		game->turn = !(game->turn);
 		game->bp = board_get_prob(game->cur);
+		bp_delete(game->bp);
 		board_get_movable(game->cur, game->bp,
 			( game->turn ? game->prob : (1 - game->prob)),
 			game->movable);
@@ -169,12 +171,12 @@ bool game_redo(Game *game)
 	return true;
 }
 
-bool game_can_brunch(Game *game)
+bool game_can_branch(Game *game)
 {
 	return false;
 }
 
-bool game_brunch(Game *game)
+bool game_branch(Game *game)
 {
 	return false;
 }

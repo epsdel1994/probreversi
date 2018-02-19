@@ -123,13 +123,37 @@ ProbTable *board_get_probtable(Board *board, int x, int y, int turn)
 	return pt;
 }
 
-BoardProb *board_get_prob(Board *board)
+BoardProb *bp_create()
 {
 	BoardProb *bp = malloc(sizeof(ProbTable***) * 8);
 	for(int i=0; i<8; i++){
 		bp[i] = malloc(sizeof(ProbTable**) * 8);
 		for(int j=0; j<8; j++){
 			bp[i][j] = malloc(sizeof(ProbTable*) * 2);
+		}
+	}
+
+	return bp;
+}
+
+void bp_delete(BoardProb *bp)
+{
+	for(int i=0; i<8; i++){
+		for(int j=0; j<8; j++){
+			pt_delete(bp[i][j][0]);
+			pt_delete(bp[i][j][1]);
+			free(bp[i][j]);
+		}
+		free(bp[i]);
+	}
+	free(bp);
+}
+
+BoardProb *board_get_prob(Board *board)
+{
+	BoardProb *bp = bp_create();
+	for(int i=0; i<8; i++){
+		for(int j=0; j<8; j++){
 			bp[i][j][0] = board_get_probtable(board, i, j, true);
 			bp[i][j][1] = board_get_probtable(board, i, j, false);
 		}

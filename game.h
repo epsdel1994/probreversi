@@ -18,7 +18,7 @@ bool game_undo(Game *game);
 bool game_can_undo(Game *game);
 bool game_can_redo(Game *game);
 bool game_redo(Game *game);
-bool game_brunch(Game *game);
+bool game_branch(Game *game);
 bool game_trunk(Game *game);
 void game_update_history(Game *game);
 void game_free_boards(Game *game);
