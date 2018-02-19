@@ -5,9 +5,9 @@
 
 "use strict";
 
-var JSprinL = {};
+var pbr-gui = {};
 
-JSprinL.setup = function(fwcyan){
+pbr-gui.setup = function(fwcyan){
 
     fwcyan.setColor(0);
 
@@ -183,10 +183,10 @@ JSprinL.setup = function(fwcyan){
 };
 
 kurumicl.onload = function(canvas){
-    JSprinL.fwcyan = FWcyan(canvas, [JSprinCore]);
-    JSprinL.setup(JSprinL.fwcyan);
+    pbr-gui.fwcyan = FWcyan(canvas, [ProbReversi]);
+    pbr-gui.setup(JSprinL.fwcyan);
 };
 kurumicl.onresize = function(){
-    JSprinL.fwcyan.resize();
-    JSprinL.fwcyan.draw();
+    pbr-gui.fwcyan.resize();
+    pbr-gui.fwcyan.draw();
 };

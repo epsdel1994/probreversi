@@ -7,7 +7,9 @@ pbr: pbr.o
 
 pbr-gui: pbr.o
 	mkdir pbr-gui
-	cp index.html FWcyan.js gui-board.js gui-pre.js pbr-gui
+	cp gui-main.html pbr-gui/index.html
+	cp FWcyan.js gui-board.js pbr-gui
+	emcc -o pbr-gui/gui.js --pre-js gui-pre.js gui.c
 
 pbr.o: board.h board.c game.h game.c
 
