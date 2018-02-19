@@ -1,0 +1,178 @@
+<!--
+	This file is part of probreversi. See
+	<https://github.com/epsdel1994/probreversi> for detail.
+-->
+
+<!DOCTYPE html>
+<html lang="en" manifest="cache.manifest">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="Content-Language" content="en" />
+        <meta http-equiv="Content-Style-Type" content="text/css" />
+        <meta http-equiv="Content-Script-Type" content="text/javascript" />
+
+        <meta name="viewport" content=
+            "width=device-width,initial-scale=1.0,minimum-scale=1.0" />
+        <!--
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        -->
+        <meta name="robots" content="noindex" />
+
+        <script type="text/javascript">
+            "use strict";
+            var kurumicl = {};
+            kurumicl._blackout = function(string){
+                var _draw = function(){
+                    kurumicl._cover.hidden = false;
+
+                    var ctx = kurumicl._cover.getContext('2d');
+                    var _fontsize;
+                    var _width = kurumicl._cover.width;
+                    var _height = kurumicl._cover.height;
+                    if(_width < _height){
+                        if(_width*1.5 < _height){
+                            _fontsize = (_width * 0.95 / 8) * 0.6;
+                        } else {
+                            _fontsize = (_height * 0.95 / 12) * 0.6;
+                        }
+                    } else {
+                        if(_height*1.5 < _width){
+                            _fontsize = (_height * 0.95 / 8) * 0.6;
+                        } else {
+                            _fontsize = (_width * 0.95 / 12) * 0.6;
+                        }
+                    }
+                    ctx.fillStyle = "rgb(0,0,0)"
+                    ctx.fillRect(0, 0, kurumicl._cover.width,
+                        kurumicl._cover.height);
+                    ctx.fillStyle = "rgb(255,255,255)"
+                    ctx.font = _fontsize + "px sans-serif";
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "middle";
+                    ctx.fillText(string,
+                        kurumicl._cover.width*0.5,
+                        kurumicl._cover.height*0.5,
+                        kurumicl._cover.width);
+                };
+                var _preventDefault = function(e){ e.preventDefault(); };
+
+                window.onresize = function(e){
+                    kurumicl._cover.style.width = window.innerWidth + 'px';
+                    kurumicl._cover.style.height = window.innerHeight + 'px';
+                    kurumicl._cover.width = window.innerWidth
+                        * window.devicePixelRatio;
+                    kurumicl._cover.height = window.innerHeight
+                        * window.devicePixelRatio;
+                    _draw();
+                };
+                window.onscroll = function(e){
+                    kurumicl._cover.style.position = 'absolute';
+                    kurumicl._cover.style.left = window.pageXOffset + 'px' ;
+                    kurumicl._cover.style.top = window.pageYOffset + 'px' ;
+                };
+                if('ontouchstart' in window){
+                    kurumicl._cover.ontouchstart = _preventDefault;
+                } else {
+                    kurumicl._cover.onmousedown = _preventDefault;
+                }
+                if('ontouchmove' in window){
+                    kurumicl._cover.ontouchmove = _preventDefault;
+                } else {
+                    kurumicl._cover.onmousemove = _preventDefault;
+                }
+                if('ontouchend' in window){
+                    kurumicl._cover.ontouchend = _preventDefault;
+                } else {
+                    kurumicl._cover.onmouseup = _preventDefault;
+                }
+
+                window.onscroll();
+                window.onresize();
+            };
+            window.onload = function(e){
+                kurumicl._canvas = document.getElementById('canvas');
+                kurumicl._cover = document.getElementById('cover');
+
+                if(window.Worker && window.applicationCache){
+                } else {
+                    kurumicl._blackout("This browser is not supported.");
+                }
+
+                kurumicl._blackout("Checking");
+
+                var cache = window.applicationCache;
+                cache.addEventListener("checking",function(e){
+                    kurumicl._blackout("Checking");
+                },false);
+                cache.addEventListener("progress",function(e){
+                    kurumicl._blackout("Downloading(" + Math.floor(e.loaded/e.total*100) + "%)");
+                },false);
+                cache.addEventListener("noupdate",function(e){
+                    kurumicl._onload();
+                },false);
+                cache.addEventListener("downloading",function(e){
+                    kurumicl._blackout("Downloading");
+                },false);
+                cache.addEventListener("cached",function(e){
+                    kurumicl._onload();
+                },false);
+                cache.addEventListener("error",function(e){
+                    alert("Failed to fetch latest data. "
+                        + "The data downloaded last time are used.");
+                    kurumicl._onload();
+                },false);
+                cache.addEventListener("updateready",function(e){
+                    cache.swapCache();
+                    window.location.reload();
+                },false);
+
+                cache.update();
+            };
+
+            kurumicl._onload = function(){
+
+                kurumicl._cover.hidden = true;
+
+                var scripts = ['FWcyan.js', 'gui-board.js', 'gui.js'];
+                var l = scripts.length;
+                var i = 0;
+
+                window.onresize = function(){
+                    kurumicl._canvas.style.width = window.innerWidth + 'px';
+                    kurumicl._canvas.style.height = window.innerHeight + 'px';
+                    kurumicl.onresize();
+                };
+                window.onscroll = function(){
+                    kurumicl._canvas.style.position = 'absolute';
+                    kurumicl._canvas.style.left = window.pageXOffset + 'px' ;
+                    kurumicl._canvas.style.top = window.pageYOffset + 'px' ;
+                };
+                window.onerror = function(message){
+                    window.alert(message);
+                    setTimeout(function(){
+                        kurumicl._blackout("An error occurred");
+                    }, 0);
+                };
+
+                (function appendScript() {
+                    var script = document.createElement('script');
+                    if( ++i < l ){ script.onload = appendScript;
+                    } else {
+                        script.onload = function(e){
+                            kurumicl.onload(kurumicl._canvas);
+                            window.onresize();
+                            window.onscroll();
+                        }
+                    }
+                    script.src = scripts[i-1];
+                    document.body.appendChild(script);
+                })();
+            }
+        </script>
+        <title>pbr-gui</title>
+    </head>
+    <body id="body">
+        <canvas id="canvas"></canvas>
+        <canvas id="cover" hidden></canvas>
+    </body>
+</html>

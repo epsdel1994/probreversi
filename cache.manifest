@@ -1,0 +1,16 @@
+CACHE MANIFEST
+# BUILD 1
+
+#
+#	This file is part of probreversi. See
+#	<https://github.com/epsdel1994/probreversi> for detail.
+#
+
+CACHE:
+index.html
+FWcyan.js
+gui-board.js
+gui.js
+
+NETWORK:
+*
