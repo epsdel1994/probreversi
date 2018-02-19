@@ -28,5 +28,7 @@ void game_str(Game *game, char *str);
 void game_print(Game *game, char *str);
 bool game_can_move(Game *game);
 void game_set_prob(Game *game, double prob);
+double game_get_prob(Game *game);
+double game_get_prob_next(Game *game);
 
 #endif

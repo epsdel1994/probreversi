@@ -35,6 +35,16 @@ void game_delete(Game *game)
 	free(game);
 }
 
+double game_get_prob_next(Game *game)
+{
+	return (game->turn ? game->prob : (1 - game->prob));
+}
+
+double game_get_prob(Game *game)
+{
+	return game->prob;
+}
+
 void game_set_prob(Game *game, double prob)
 {
 	game->prob = prob;

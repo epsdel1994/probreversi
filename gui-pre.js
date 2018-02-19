@@ -44,7 +44,13 @@ pbr_gui.setup = function(fwcyan){
     };
     pbr_gui.button_status = fwcyan.Button.create("Status", 0);
     pbr_gui.button_style = fwcyan.Button.create("Style", 0);
-    pbr_gui.button_baseprob = fwcyan.Button.create("BaseProb", 0);
+    pbr_gui.button_baseprob = fwcyan.ButtonVolume.create
+        ("Probability", 99, 51, 80);
+    pbr_gui.button_baseprob.change = function(){
+        Module.cwrap('ems_set_prob_base', '', ['number'])(this._value/100);
+        pbr_gui.update();
+        pbr_gui.fwcyan.draw();
+    }
     pbr_gui.button_about = fwcyan.Button.create("About", 1);
     pbr_gui.button_about.select = function(){
         window.open("https://github.com/epsdel1994/probreversi");
@@ -91,7 +97,6 @@ pbr_gui.update = function(){
 
 //    var nextprob = Module.cwrap('ems_get_prob_next', 'number', [])();
 //    var count_black = Module.cwrap('ems_count', 'number', [])();
-//    var baseprob = Module.cwrap('ems_get_prob_base', 'number', [])();
 };
 
 kurumicl.onload = function(canvas){

@@ -70,9 +70,20 @@ int EMSCRIPTEN_KEEPALIVE ems_count()
 	return 32;
 }
 
-void EMSCRIPTEN_KEEPALIVE ems_set_prob(double prob)
+double EMSCRIPTEN_KEEPALIVE ems_get_prob_base()
+{
+	return game_get_prob(game);
+}
+
+double EMSCRIPTEN_KEEPALIVE ems_get_prob_next()
+{
+	return game_get_prob_next(game);
+}
+
+void EMSCRIPTEN_KEEPALIVE ems_set_prob_base(double prob)
 {
 	game_set_prob(game, prob);
+	game_update_probtable(game);
 }
 
 void EMSCRIPTEN_KEEPALIVE ems_new()
