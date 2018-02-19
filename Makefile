@@ -10,7 +10,7 @@ pbr-gui: gui-main.html FWcyan.js gui-board.js cache.manifest gui-pre.js gui.c bo
 	mkdir -p pbr-gui
 	cp gui-main.html pbr-gui/index.html
 	cp FWcyan.js gui-board.js cache.manifest pbr-gui
-	emcc -std=c99 -O0 -g gui.c -o pbr-gui/gui.js --pre-js gui-pre.js \
+	emcc -std=c99 -O3 -flto gui.c -o pbr-gui/gui.js --pre-js gui-pre.js \
 		-s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]'
 
 clean:
