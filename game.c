@@ -35,10 +35,11 @@ void game_delete(Game *game)
 	free(game);
 }
 
-double game_get_prob_next(Game *game)
+int game_get_prob_next(Game *game)
 {
 	if(game->isover == false){
-		return (game->turn ? game->prob : (1 - game->prob));
+		return (int)((game->turn ? game->prob :
+			(1 - game->prob)) * 100 + 0.5);
 	} else {
 		return -1;
 	}

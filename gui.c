@@ -75,7 +75,7 @@ double EMSCRIPTEN_KEEPALIVE ems_get_prob_base()
 	return game_get_prob(game);
 }
 
-double EMSCRIPTEN_KEEPALIVE ems_get_prob_next()
+int EMSCRIPTEN_KEEPALIVE ems_get_prob_next()
 {
 	return game_get_prob_next(game);
 }

@@ -13,11 +13,6 @@ var ProbReversi = function(fwcyan){
     fwcyan.plugin.ProbReversi.Board.prototype
         = Object.create(fwcyan.Element.prototype);
     fwcyan.plugin.ProbReversi.Board.prototype.setStyle = function(style){
-/*
-        if( style === true ){
-        } else {
-        }
-*/
     }
     fwcyan.plugin.ProbReversi.Board.prototype.setBoard = function(board){
         for(var i=0; i<8; i++){
@@ -96,19 +91,94 @@ var ProbReversi = function(fwcyan){
                         );
                     }
                     continue;
-                } else { 
+                } else if(pbr_gui.style === 0 ) { 
                     var scale = Math.floor
                         ((255 * (100 - this._cell[i][j])) / 100);
                     this._drawer.ctx.fillStyle =
                         "rgb(" + scale + "," + scale + "," + scale + ")";
+                    this._drawer.ctx.beginPath();
+                    this._drawer.ctx.arc(
+                        this._drawer.rect.x
+                            + (this._drawer.rect.width/8)*(i+0.5),
+                        this._drawer.rect.y
+                            + (this._drawer.rect.height/8)*(j+0.5),
+                        this._drawer.rect.width * 0.45 * 0.125,
+                        0, Math.PI*2, false);
+                    this._drawer.ctx.fill();
+                    this._drawer.ctx.stroke();
+                } else if(pbr_gui.style === 1 ) { 
+                    if(this._cell[i][j] >= 50){
+                        this._drawer.ctx.fillStyle = "rgb(0, 0, 0)";
+                    } else {
+                        this._drawer.ctx.fillStyle = "rgb(255, 255, 255)";
+                    }
+                    this._drawer.ctx.beginPath();
+                    this._drawer.ctx.arc(
+                        this._drawer.rect.x
+                            + (this._drawer.rect.width/8)*(i+0.5),
+                        this._drawer.rect.y
+                            + (this._drawer.rect.height/8)*(j+0.5),
+                        this._drawer.rect.width * 0.45 * 0.125,
+                        0, Math.PI*2, false);
+                    this._drawer.ctx.fill();
+                    this._drawer.ctx.stroke();
+
+                    if(this._cell[i][j] >= 50){
+                        this._drawer.ctx.fillStyle = "rgb(255, 255, 255)";
+                    } else {
+                        this._drawer.ctx.fillStyle = "rgb(0, 0, 0)";
+                    }
+                    this._drawer.ctx.textAlign = "center";
+                    this._drawer.ctx.textBaseline = "middle";
+                    this._drawer.ctx.font
+                        = ( this._drawer.rect.width * 0.6 * 0.125 )
+                        + "px sans-serif";
+                    this._drawer.ctx.fillText(this._cell[i][j],
+                        this._drawer.rect.x
+                            + (this._drawer.rect.width/8)*(i+0.5),
+                        this._drawer.rect.y
+                            + (this._drawer.rect.height/8)*(j+0.5),
+                        this._drawer.rect.width * 0.125);
+                } else if(pbr_gui.style === 2 ) { 
+                    this._drawer.ctx.fillStyle ="rgb(255, 255, 255)";
+                    this._drawer.ctx.beginPath();
+                    this._drawer.ctx.arc(
+                        this._drawer.rect.x
+                            + (this._drawer.rect.width/8)*(i+0.5),
+                        this._drawer.rect.y
+                            + (this._drawer.rect.height/8)*(j+0.5),
+                        this._drawer.rect.width * 0.45 * 0.125,
+                        0, Math.PI*2, false
+                    );
+                    this._drawer.ctx.fill();
+                    this._drawer.ctx.stroke();
+
+                    this._drawer.ctx.fillStyle ="rgb(0, 0, 0)";
+                    this._drawer.ctx.beginPath();
+                    this._drawer.ctx.moveTo(
+                        this._drawer.rect.x
+                            + (this._drawer.rect.width/8)*(i+0.5),
+                        this._drawer.rect.y
+                            + (this._drawer.rect.height/8)*(j+0.5),
+                    );
+                    this._drawer.ctx.arc(
+                        this._drawer.rect.x
+                            + (this._drawer.rect.width/8)*(i+0.5),
+                        this._drawer.rect.y
+                            + (this._drawer.rect.height/8)*(j+0.5),
+                        this._drawer.rect.width * 0.45 * 0.125,
+                        ((0 - 0.25) * Math.PI * 2),
+                        ((this._cell[i][j]/100 - 0.25) * Math.PI * 2),
+                        false
+                    );
+                    this._drawer.ctx.lineTo(
+                        this._drawer.rect.x
+                            + (this._drawer.rect.width/8)*(i+0.5),
+                        this._drawer.rect.y
+                            + (this._drawer.rect.height/8)*(j+0.5),
+                    );
+                    this._drawer.ctx.fill();
                 }
-                this._drawer.ctx.beginPath();
-                this._drawer.ctx.arc(
-                    this._drawer.rect.x + (this._drawer.rect.width/8)*(i+0.5),
-                    this._drawer.rect.y + (this._drawer.rect.height/8)*(j+0.5),
-                    this._drawer.rect.width*0.45*0.125, 0, Math.PI*2, false);
-                this._drawer.ctx.fill();
-                this._drawer.ctx.stroke();
             }
         }
     };
@@ -192,7 +262,7 @@ var ProbReversi = function(fwcyan){
             this._drawer.ctx.arc(
                 this._drawer.rect.x + this._drawer.rect.width * 0.2,
                 this._drawer.rect.y + this._drawer.rect.height * 0.3,
-                this._drawer.rect.width * 0.117, Math.PI*2, false
+                this._drawer.rect.width * 0.117, 0, Math.PI*2, false
             );
             this._drawer.ctx.fill();
             this._drawer.ctx.stroke();
@@ -202,7 +272,7 @@ var ProbReversi = function(fwcyan){
             this._drawer.ctx.arc(
                 this._drawer.rect.x + this._drawer.rect.width * 0.8,
                 this._drawer.rect.y + this._drawer.rect.height * 0.3,
-                this._drawer.rect.width * 0.117, Math.PI*2, false
+                this._drawer.rect.width * 0.117, 0, Math.PI*2, false
             );
             this._drawer.ctx.fill();
             this._drawer.ctx.stroke();
@@ -245,18 +315,79 @@ var ProbReversi = function(fwcyan){
                 this._drawer.rect.width * 0.5, this._drawer.rect.height * 0.5
             );
 
-	    var scale = Math.floor(255 * (1 - this._prob));
-console.log(this._prob);
-	    this._drawer.ctx.fillStyle =
-		"rgb(" + scale + "," + scale + "," + scale + ")";
-            this._drawer.ctx.beginPath();
-            this._drawer.ctx.arc(
-                this._drawer.rect.x + this._drawer.rect.width * 0.5,
-                this._drawer.rect.y + this._drawer.rect.height * 0.65,
-                this._drawer.rect.width * 0.225, Math.PI*2, false
-            );
-            this._drawer.ctx.fill();
-            this._drawer.ctx.stroke();
+            if(pbr_gui.style === 0){
+//                var scale = Math.floor(255 * (1 - this._prob));
+                var scale = Math.floor((255 * (100 - this._prob)) / 100);
+                this._drawer.ctx.fillStyle =
+                    "rgb(" + scale + "," + scale + "," + scale + ")";
+                this._drawer.ctx.beginPath();
+                this._drawer.ctx.arc(
+                    this._drawer.rect.x + this._drawer.rect.width * 0.5,
+                    this._drawer.rect.y + this._drawer.rect.height * 0.65,
+                    this._drawer.rect.width * 0.225, 0, Math.PI*2, false);
+                this._drawer.ctx.fill();
+                this._drawer.ctx.stroke();
+	    } else if(pbr_gui.style === 1){
+                if(this._prob >= 50){
+                    this._drawer.ctx.fillStyle = "rgb(0, 0, 0)";
+                } else {
+                    this._drawer.ctx.fillStyle = "rgb(255, 255, 255)";
+                }
+                this._drawer.ctx.beginPath();
+                this._drawer.ctx.arc(
+                    this._drawer.rect.x + this._drawer.rect.width * 0.5,
+                    this._drawer.rect.y + this._drawer.rect.height * 0.65,
+                    this._drawer.rect.width * 0.225, 0, Math.PI*2, false);
+                this._drawer.ctx.fill();
+                this._drawer.ctx.stroke();
+
+                if(this._prob >= 50){
+                    this._drawer.ctx.fillStyle = "rgb(255, 255, 255)";
+                } else {
+                    this._drawer.ctx.fillStyle = "rgb(0, 0, 0)";
+                }
+                this._drawer.ctx.textAlign = "center";
+                this._drawer.ctx.textBaseline = "middle";
+                this._drawer.ctx.font
+                    = ( this._drawer.rect.width * 0.6 * 0.45 )
+                    + "px sans-serif";
+                this._drawer.ctx.fillText(this._prob,
+                    this._drawer.rect.x + this._drawer.rect.width * 0.5,
+                    this._drawer.rect.y + this._drawer.rect.height * 0.65,
+                    this._drawer.rect.width * 0.45);
+            } else if(pbr_gui.style === 2){
+                this._drawer.ctx.fillStyle ="rgb(255, 255, 255)";
+                this._drawer.ctx.beginPath();
+                this._drawer.ctx.arc(
+                    this._drawer.rect.x + this._drawer.rect.width * 0.5,
+                    this._drawer.rect.y + this._drawer.rect.height * 0.65,
+                    this._drawer.rect.width * 0.45 * 0.45,
+                    0, Math.PI*2, false
+                );
+                this._drawer.ctx.fill();
+                this._drawer.ctx.stroke();
+
+                this._drawer.ctx.fillStyle ="rgb(0, 0, 0)";
+                this._drawer.ctx.beginPath();
+                this._drawer.ctx.moveTo(
+                    this._drawer.rect.x + this._drawer.rect.width * 0.5,
+                    this._drawer.rect.y + this._drawer.rect.height * 0.65,
+                );
+                this._drawer.ctx.arc(
+                    this._drawer.rect.x + this._drawer.rect.width * 0.5,
+                    this._drawer.rect.y + this._drawer.rect.height * 0.65,
+                    this._drawer.rect.width * 0.45 * 0.45,
+                    ((0 - 0.25) * Math.PI * 2),
+                    ((this._prob/100 - 0.25) * Math.PI * 2),
+                    false
+                );
+                this._drawer.ctx.lineTo(
+                    this._drawer.rect.x + this._drawer.rect.width * 0.5,
+                    this._drawer.rect.y + this._drawer.rect.height * 0.65,
+                );
+                this._drawer.ctx.fill();
+                this._drawer.ctx.stroke();
+            }
         }
     };
     fwcyan.plugin.ProbReversi.Status.prototype.update
@@ -269,5 +400,94 @@ console.log(this._prob);
             this._is_over = false;
             this._prob = prob_count;
         }
+    };
+    fwcyan.plugin.ProbReversi.Disk = Object.create(Object.prototype);
+    fwcyan.plugin.ProbReversi.Disk.prototype
+        = Object.create(fwcyan.ToggleItem.prototype);
+    fwcyan.plugin.ProbReversi.Disk.prototype.draw = function(){
+        this._score = 1;
+        fwcyan.Button.prototype._draw_frame.call(this);
+
+        if(this._style === 0){
+            var scale = Math.floor((255 * (100 - this._prob)) / 100);
+            this._drawer.ctx.fillStyle =
+                "rgb(" + scale + "," + scale + "," + scale + ")";
+            this._drawer.ctx.beginPath();
+            this._drawer.ctx.arc(
+                this._drawer.rect.x + this._drawer.rect.width * 0.5,
+                this._drawer.rect.y + this._drawer.rect.height * 0.5,
+                this._drawer.rect.width * 0.45, 0, Math.PI*2, false
+            );
+            this._drawer.ctx.fill();
+            this._drawer.ctx.stroke();
+        } else if(this._style === 1){
+            if(this._prob >= 50){
+                this._drawer.ctx.fillStyle ="rgb(0, 0, 0)";
+            } else {
+                this._drawer.ctx.fillStyle ="rgb(255, 255, 255)";
+            }
+            this._drawer.ctx.beginPath();
+            this._drawer.ctx.arc(
+                this._drawer.rect.x + this._drawer.rect.width * 0.5,
+                this._drawer.rect.y + this._drawer.rect.height * 0.5,
+                this._drawer.rect.width * 0.45, 0, Math.PI*2, false
+            );
+            this._drawer.ctx.fill();
+            this._drawer.ctx.stroke();
+
+            if(this._prob >= 50){
+                this._drawer.ctx.fillStyle = "rgb(255, 255, 255)";
+            } else {
+                this._drawer.ctx.fillStyle = "rgb(0, 0, 0)";
+            }
+            this._drawer.ctx.textAlign = "center";
+            this._drawer.ctx.textBaseline = "middle";
+            this._drawer.ctx.font
+                = ( this._drawer.rect.width * 0.6) + "px sans-serif";
+            this._drawer.ctx.fillText(this._prob,
+                this._drawer.rect.x + this._drawer.rect.width * 0.5,
+                this._drawer.rect.y + this._drawer.rect.height * 0.5,
+                this._drawer.rect.width);
+        } else if(this._style === 2){
+            this._drawer.ctx.fillStyle ="rgb(255, 255, 255)";
+            this._drawer.ctx.beginPath();
+            this._drawer.ctx.arc(
+                this._drawer.rect.x + this._drawer.rect.width * 0.5,
+                this._drawer.rect.y + this._drawer.rect.height * 0.5,
+                this._drawer.rect.width * 0.45, 0, Math.PI*2, false
+            );
+            this._drawer.ctx.fill();
+            this._drawer.ctx.stroke();
+
+            this._drawer.ctx.fillStyle ="rgb(0, 0, 0)";
+            this._drawer.ctx.beginPath();
+            this._drawer.ctx.moveTo(
+                this._drawer.rect.x + this._drawer.rect.width * 0.5,
+                this._drawer.rect.y + this._drawer.rect.height * 0.5,
+            );
+            this._drawer.ctx.arc(
+                this._drawer.rect.x + this._drawer.rect.width * 0.5,
+                this._drawer.rect.y + this._drawer.rect.height * 0.5,
+                this._drawer.rect.width * 0.45,
+                ((0 - 0.25) * Math.PI * 2),
+                ((this._prob/100 - 0.25) * Math.PI * 2),
+                false
+            );
+            this._drawer.ctx.lineTo(
+                this._drawer.rect.x + this._drawer.rect.width * 0.5,
+                this._drawer.rect.y + this._drawer.rect.height * 0.5,
+            );
+            this._drawer.ctx.fill();
+            this._drawer.ctx.stroke();
+        } else {
+            throw new Error("unknown style");
+        }
+    };
+    fwcyan.plugin.ProbReversi.Disk.create = function(prob, style, proto){
+        proto = proto || fwcyan.plugin.ProbReversi.Disk.prototype;
+        var prd = fwcyan.ToggleItem.create(style, proto);
+        prd._prob = prob;
+        prd._style = style;
+        return prd;
     };
 };

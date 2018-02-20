@@ -44,7 +44,32 @@ pbr_gui.setup = function(fwcyan){
     };
     pbr_gui.button_status = fwcyan.plugin.ProbReversi.Status.create
         ();
-    pbr_gui.button_style = fwcyan.Button.create("Style", 0);
+/*
+    JSprinL.edit_putToggle_Black = fwcyan.plugin.JSprinCore.ReversiDisk.create(
+        JSprinL.reversi_edit_board.color.Black);
+    JSprinL.edit_putToggle_White = fwcyan.plugin.JSprinCore.ReversiDisk.create(
+        JSprinL.reversi_edit_board.color.White);
+    JSprinL.edit_putToggle_Empty = fwcyan.plugin.JSprinCore.ReversiDisk.create(
+        JSprinL.reversi_edit_board.color.Empty);
+    JSprinL.edit_putToggle = fwcyan.ButtonToggle.create("Put color", [
+        JSprinL.edit_putToggle_Black,
+        JSprinL.edit_putToggle_White,
+        JSprinL.edit_putToggle_Empty,
+    ]);
+*/
+    pbr_gui.item_grayscale = fwcyan.plugin.ProbReversi.Disk.create(80, 0);
+    pbr_gui.item_number = fwcyan.plugin.ProbReversi.Disk.create(80, 1);
+    pbr_gui.item_graph = fwcyan.plugin.ProbReversi.Disk.create(80, 2);
+    pbr_gui.button_style = fwcyan.ButtonToggle.create("Style", [
+        pbr_gui.item_grayscale,
+        pbr_gui.item_number,
+        pbr_gui.item_graph,
+    ]);
+    pbr_gui.button_style.change = function(){
+        pbr_gui.style = this._item._value;
+        pbr_gui.update();
+        pbr_gui.fwcyan.draw();
+    };
     pbr_gui.button_baseprob = fwcyan.ButtonVolume.create
         ("Probability", 99, 51, 80);
     pbr_gui.button_baseprob.change = function(){
@@ -106,6 +131,7 @@ pbr_gui.update = function(){
 };
 
 kurumicl.onload = function(){
+    pbr_gui.style = 0;
 };
 
 kurumicl.onstart = function(canvas){
