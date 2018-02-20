@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# BUILD 5
+# BUILD 6
 
 #
 #	This file is part of probreversi. See
@@ -11,6 +11,7 @@ index.html
 FWcyan.js
 gui-board.js
 gui.js
+gui.js.mem
 
 NETWORK:
 *
