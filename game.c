@@ -6,6 +6,7 @@
 #include "game.h"
 
 #include <stdlib.h>
+#include <float.h>
 
 struct _Game {
 	Board *cur, *hist[60][60];
@@ -14,6 +15,11 @@ struct _Game {
 	int hist_num, hist_cur[60], hist_max[60];
 	double prob;
 };
+
+int prob_to_int(double prob)
+{
+	return (prob + 0.0000000001) * 100;
+}
 
 Game *game_create(double prob)
 {
@@ -38,8 +44,8 @@ void game_delete(Game *game)
 int game_get_prob_next(Game *game)
 {
 	if(game->isover == false){
-		return (int)((game->turn ? game->prob :
-			(1 - game->prob)) * 100 + 0.5);
+		return prob_to_int(game->turn ? game->prob :
+			(1 - game->prob));
 	} else {
 		return -1;
 	}
@@ -214,8 +220,8 @@ void game_str(Game *game, char *str)
 	board_get(game->cur, game->movable, str);
 	if(game->isover == false){
 		str[128] = 'p';
-		sprintf(str+129, "%02d", (int)((game->turn ? game->prob :
-			(1 - game->prob)) * 100 + 0.5));
+		sprintf(str+129, "%02d", prob_to_int(game->turn ? game->prob :
+			(1 - game->prob)));
 	} else {
 		sprintf(str+129, "o");
 	}
@@ -226,8 +232,8 @@ void game_print(Game *game, char *str)
 	board_print(game->cur, game->movable);
 	if(game->isover == false){
 		printf("Black probability of next disk is [%02d]\n",
-			(int)((game->turn ? game->prob :
-				(1 - game->prob)) * 100 + 0.5));
+			prob_to_int(game->turn ? game->prob :
+				(1 - game->prob)));
 	} else {
 		printf("Game Over\n");
 	}
