@@ -16,11 +16,6 @@ struct _Game {
 	double prob;
 };
 
-int prob_to_int(double prob)
-{
-	return (prob + 0.0000000001) * 100;
-}
-
 Game *game_create(double prob)
 {
 	Game *game = malloc(sizeof(Game));

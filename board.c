@@ -16,6 +16,12 @@ struct _ProbTable { double prob, **table, **sum; int *n; };
 int dx[] = {0, 0, -1, 1, -1, 1, -1, 1};
 int dy[] = {-1, 1, 0, 0, -1, 1, 1, -1};
 
+int prob_to_int(double prob)
+{
+	return (prob + DBL_EPSILON) * 100;
+}
+
+
 Board *board_create(double prob)
 {
 	Board *board = malloc(sizeof(Board));
@@ -42,8 +48,8 @@ Board *board_create(double prob)
 
 	board->prob[3][4] = prob;
 	board->prob[4][3] = prob;
-	board->prob[3][3] = 1 - prob;
-	board->prob[4][4] = 1 - prob;
+	board->prob[3][3] = 1.0 - prob;
+	board->prob[4][4] = 1.0 - prob;
 
 	return board;
 }
@@ -299,7 +305,7 @@ void board_get(Board *board, bool **movable, char *str)
 					sprintf(str+pos, "--");
 				}
 			} else {
-				int res = board->prob[i][j] * 100 + 0.5;
+				int res = prob_to_int(board->prob[i][j]);
 				if(res>99){ res = 99; }
 				if(res<0){ res = 0; }
 				sprintf(str+pos, "%02d", res);
@@ -323,24 +329,10 @@ void board_print(Board *board, bool **movable)
 					printf("--|");
 				}
 			} else {
-				int res = board->prob[i][j] * 100 + 0.5;
+				int res = prob_to_int(board->prob[i][j]);
 				if(res>99){ res = 99; }
 				if(res<0){ res = 0; }
 				printf("%02d|", res);
-			}
-		}
-		printf("\n");
-	}
-	printf("\n");
-
-	printf("\n  *A |B |C |D |E |F |G |H *\n");
-	for(int i=0; i<8; i++){
-		printf(" %d|", i+1);
-		for(int j=0; j<8; j++){
-			if(board->disk[i][j] == false){
-				printf("--, ");
-			} else {
-				printf("%f, ", board->prob[i][j]);
 			}
 		}
 		printf("\n");
