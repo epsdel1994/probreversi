@@ -263,10 +263,13 @@ Board *board_move(Board *board, int x, int y, double prob, BoardProb *bp)
 		}
 	}
 
+	double r1 = prob * bp[x][y][0]->prob / move_prob;
+	double r2 = (1 - prob) * bp[x][y][1]->prob / move_prob;
+
 	for(int i=0; i<8; i++){
 		for(int j=0; j<8; j++){
-			r->prob[i][j] = prob * a1->prob[i][j]
-				+ (1 - prob) * a2->prob[i][j];
+			r->prob[i][j] = r1 * a1->prob[i][j]
+				+ r2 * a2->prob[i][j];
 		}
 	}
 
