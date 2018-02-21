@@ -8,6 +8,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <float.h>
+
 struct _Board { bool **disk; double **prob; };
 struct _ProbTable { double prob, **table, **sum; int *n; };
 
@@ -113,12 +115,15 @@ ProbTable *board_get_probtable(Board *board, int x, int y, int turn)
 
 		pt->sum[i][j] = 0;
 		for(int k=j; k>0; k--){
-			pt->sum[i][k-1]
-				= pt->sum[i][k] + pt->table[i][k-1];
+			pt->sum[i][k-1] = pt->sum[i][k] + pt->table[i][k-1];
 		}
+		if(pt->sum[i][1] == 0){ pt->sum[i][1] = DBL_MIN; }
+		if(pt->sum[i][1] == 1){ pt->sum[i][1] = 1 - DBL_EPSILON; }
 		nprob *= (1 - pt->sum[i][1]);
 	}
 	pt->prob = (1 - nprob);
+	if(pt->prob == 0){ pt->prob = DBL_MIN; }
+	if(pt->prob == 1){ pt->prob = 1 - DBL_EPSILON; }
 
 	return pt;
 }
@@ -179,6 +184,8 @@ Board *board_move(Board *board, int x, int y, double prob, BoardProb *bp)
 	if((move_prob <= 0.5) || (board->disk[x][y] == true)){
 		return NULL;
 	}
+	if(move_prob == 0){ move_prob = DBL_MIN; }
+	if(move_prob == 1){ move_prob = 1 - DBL_EPSILON; }
 
 	Board *r = board_create(0);
 	Board *a1 = board_create(0);
@@ -320,6 +327,20 @@ void board_print(Board *board, bool **movable)
 				if(res>99){ res = 99; }
 				if(res<0){ res = 0; }
 				printf("%02d|", res);
+			}
+		}
+		printf("\n");
+	}
+	printf("\n");
+
+	printf("\n  *A |B |C |D |E |F |G |H *\n");
+	for(int i=0; i<8; i++){
+		printf(" %d|", i+1);
+		for(int j=0; j<8; j++){
+			if(board->disk[i][j] == false){
+				printf("--, ");
+			} else {
+				printf("%f, ", board->prob[i][j]);
 			}
 		}
 		printf("\n");
