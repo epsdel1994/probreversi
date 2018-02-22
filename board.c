@@ -123,13 +123,13 @@ ProbTable *board_get_probtable(Board *board, int x, int y, int turn)
 		for(int k=j; k>0; k--){
 			pt->sum[i][k-1] = pt->sum[i][k] + pt->table[i][k-1];
 		}
-		if(pt->sum[i][1] == 0){ pt->sum[i][1] = DBL_MIN; }
-		if(pt->sum[i][1] == 1){ pt->sum[i][1] = 1 - DBL_EPSILON; }
+		if(pt->sum[i][1] <= 0){ pt->sum[i][1] = DBL_EPSILON; }
+		if(pt->sum[i][1] >= 1){ pt->sum[i][1] = 1 - DBL_EPSILON; }
 		nprob *= (1 - pt->sum[i][1]);
 	}
 	pt->prob = (1 - nprob);
-	if(pt->prob == 0){ pt->prob = DBL_MIN; }
-	if(pt->prob == 1){ pt->prob = 1 - DBL_EPSILON; }
+	if(pt->prob <= 0){ pt->prob = DBL_EPSILON; }
+	if(pt->prob >= 1){ pt->prob = 1 - DBL_EPSILON; }
 
 	return pt;
 }
@@ -190,8 +190,8 @@ Board *board_move(Board *board, int x, int y, double prob, BoardProb *bp)
 	if((move_prob <= 0.5) || (board->disk[x][y] == true)){
 		return NULL;
 	}
-	if(move_prob == 0){ move_prob = DBL_MIN; }
-	if(move_prob == 1){ move_prob = 1 - DBL_EPSILON; }
+	if(move_prob <= 0){ move_prob = DBL_EPSILON; }
+	if(move_prob >= 1){ move_prob = 1 - DBL_EPSILON; }
 
 	Board *r = board_create(0);
 	Board *a1 = board_create(0);
@@ -283,6 +283,9 @@ Board *board_move(Board *board, int x, int y, double prob, BoardProb *bp)
 		for(int j=0; j<8; j++){
 			r->prob[i][j] = r1 * a1->prob[i][j]
 				+ r2 * a2->prob[i][j];
+			if(r->prob[i][j] <= 0){ r->prob[i][j] = DBL_EPSILON; }
+			if(r->prob[i][j] >= 1){
+				r->prob[i][j] = 1 - DBL_EPSILON; }
 		}
 	}
 
