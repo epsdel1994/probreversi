@@ -316,7 +316,6 @@ var ProbReversi = function(fwcyan){
             );
 
             if(pbr_gui.style === 0){
-//                var scale = Math.floor(255 * (1 - this._prob));
                 var scale = Math.floor((255 * (100 - this._prob)) / 100);
                 this._drawer.ctx.fillStyle =
                     "rgb(" + scale + "," + scale + "," + scale + ")";
