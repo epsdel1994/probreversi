@@ -108,7 +108,7 @@ void game_new(Game *game)
 	game->hist_cur[0] = -1;
 	game->hist_max[0] = -1;
 	if(game->cur){ board_delete(game->cur); }
-	game->cur = board_create(game->prob);
+	game->cur = board_create(1 - DBL_EPSILON);
 	game->turn = true;
 	game_update_history(game);
 	game_update_probtable(game);
