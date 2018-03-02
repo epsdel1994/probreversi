@@ -10,7 +10,7 @@
 
 struct _Game {
 	Board *cur, *hist[60][60];
-	bool **movable, turn, isover, turnhist[60][60];
+	bool **movable, turn, isover, turnhist[60][60], overhist[60][60];
 	BoardProb *bp;
 	int hist_num, hist_cur[60], hist_max[60];
 	double prob;
@@ -62,20 +62,6 @@ void game_update_probtable(Game *game)
 	game->bp = board_get_prob(game->cur);
 	board_get_movable(game->cur, game->bp,
 		( game->turn ? game->prob : (1 - game->prob)), game->movable);
-
-	game->isover = false;
-	if(game_can_move(game) == false){
-		game->turn = !(game->turn);
-		if(game->bp){ bp_delete(game->bp); };
-		game->bp = board_get_prob(game->cur);
-		board_get_movable(game->cur, game->bp,
-			( game->turn ? game->prob : (1 - game->prob)),
-			game->movable);
-		if(game_can_move(game) == false){
-			game->turn = !(game->turn);
-			game->isover = true;
-		}
-	}
 }
 
 void game_update_history(Game *game)
@@ -91,6 +77,8 @@ void game_update_history(Game *game)
 		[game->hist_cur[game->hist_num]] = game->cur;
 	game->turnhist[game->hist_num]
 		[game->hist_cur[game->hist_num]] = game->turn;
+	game->overhist[game->hist_num]
+		[game->hist_cur[game->hist_num]] = game->isover;
 }
 
 void game_free_boards(Game *game)
@@ -139,18 +127,23 @@ bool game_move(Game *game, int x, int y)
 	game->cur = board_move(game->cur, x, y,
 		(game->turn ? game->prob : (1 - game->prob)), game->bp);
 	game->turn = !(game->turn);
+	game_update_history(game);
 
+	game->isover = false;
 	game_update_probtable(game);
-/*
 	if(game_can_move(game) == false){
 		game->turn = !(game->turn);
 		game_update_probtable(game);
 		if(game_can_move(game) == false){
 			game->turn = !(game->turn);
+			game->isover = true;
+		} else {
+			game_update_history(game);
+			game->turn = !(game->turn);
+			game_undo(game);
 		}
 	}
-*/
-	game_update_history(game);
+
 	return true;
 }
 
@@ -162,10 +155,13 @@ bool game_can_undo(Game *game)
 bool game_undo(Game *game)
 {
 	if(game->hist_cur[game->hist_num] == 0){ return false; }
+	game->isover = false;
 	game->hist_cur[game->hist_num] -= 1;
 	game->cur = game->hist[game->hist_num]
 		[game->hist_cur[game->hist_num]];
 	game->turn = game->turnhist[game->hist_num]
+		[game->hist_cur[game->hist_num]];
+	game->isover = game->overhist[game->hist_num]
 		[game->hist_cur[game->hist_num]];
 	game_update_probtable(game);
 	return true;
@@ -181,10 +177,13 @@ bool game_redo(Game *game)
 {
 	if(game->hist_cur[game->hist_num]
 		== game->hist_max[game->hist_num]){ return false; }
+	game->isover = false;
 	game->hist_cur[game->hist_num] += 1;
 	game->cur = game->hist[game->hist_num]
 		[game->hist_cur[game->hist_num]];
 	game->turn = game->turnhist[game->hist_num]
+		[game->hist_cur[game->hist_num]];
+	game->isover = game->overhist[game->hist_num]
 		[game->hist_cur[game->hist_num]];
 	game_update_probtable(game);
 	return true;
