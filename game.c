@@ -127,7 +127,6 @@ bool game_move(Game *game, int x, int y)
 	game->cur = board_move(game->cur, x, y,
 		(game->turn ? game->prob : (1 - game->prob)), game->bp);
 	game->turn = !(game->turn);
-	game_update_history(game);
 
 	game->isover = false;
 	game_update_probtable(game);
@@ -137,11 +136,16 @@ bool game_move(Game *game, int x, int y)
 		if(game_can_move(game) == false){
 			game->turn = !(game->turn);
 			game->isover = true;
+			game_update_history(game);
 		} else {
+			game->turn = !(game->turn);
 			game_update_history(game);
 			game->turn = !(game->turn);
+			game_update_history(game);
 			game_undo(game);
 		}
+	} else {
+		game_update_history(game);
 	}
 
 	return true;
