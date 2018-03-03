@@ -98,6 +98,7 @@ void game_new(Game *game)
 	if(game->cur){ board_delete(game->cur); }
 	game->cur = board_create(1 - DBL_EPSILON);
 	game->turn = true;
+	game->isover = false;
 	game_update_history(game);
 	game_update_probtable(game);
 }
